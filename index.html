@@ -12,7 +12,7 @@
     --bg:#140e26; --bg2:#1d1440; --panel:#241a4d; --panel2:#2e2260;
     --ink:#efe9ff; --muted:#9d92c9; --line:#3a2d6e;
     --gold:#ffd257; --gold2:#ffb23e; --xp:#54d6ff; --xp2:#3a8bff;
-    --hp:#ff5c7a; --green:#5ee6a0; --shadow:0 4px 0 rgba(0,0,0,.35);
+    --hp:#ff5c7a; --hp2:#c0304f; --green:#5ee6a0; --shadow:0 4px 0 rgba(0,0,0,.35);
     --heat0:#221a45; --heat1:#3b5c48; --heat2:#4f9866; --heat3:#5ee6a0;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -30,51 +30,51 @@
   h1,h2,h3{margin:0; letter-spacing:.5px}
   .pix{text-shadow:2px 2px 0 rgba(0,0,0,.5)}
 
-  /* ---- Header / status ---- */
-  .status{
-    background:linear-gradient(180deg,var(--panel2),var(--panel));
-    border:2px solid var(--line); border-radius:14px; padding:14px;
-    box-shadow:var(--shadow); position:relative; overflow:hidden;
-  }
+  /* ---- Status ---- */
+  .status{background:linear-gradient(180deg,var(--panel2),var(--panel));
+    border:2px solid var(--line); border-radius:14px; padding:14px; box-shadow:var(--shadow); position:relative; overflow:hidden}
   .status .title{font-size:12px; color:var(--gold); letter-spacing:2px}
   .heroRow{display:flex; gap:14px; align-items:center; margin-top:8px}
-  .heroBox{
-    width:88px; height:88px; flex:0 0 auto; border-radius:12px;
-    background:radial-gradient(circle at 50% 35%, #3b2d78, #1b1440);
-    border:2px solid var(--line); display:grid; place-items:center;
-    image-rendering:pixelated;
-  }
-  .heroBox svg{width:70px; height:70px; image-rendering:pixelated}
+  .heroBox{width:88px; height:88px; flex:0 0 auto; border-radius:12px;
+    border:2px solid var(--line); display:grid; place-items:center; image-rendering:pixelated}
+  .heroBox svg{width:74px; height:74px; image-rendering:pixelated}
   .heroInfo{flex:1; min-width:0}
   .lvline{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
   .lv{font-size:22px; color:var(--gold); font-weight:700}
   .cls{font-size:12px; color:var(--muted)}
+  .titleChip{display:inline-block; margin-top:5px; font-size:11px; color:#ffe9a8;
+    background:#3a2d1a; border:1px solid #6b551f; padding:2px 8px; border-radius:20px}
   .bar{height:14px; border-radius:8px; background:#160f30; border:1px solid var(--line);
     overflow:hidden; margin-top:8px; position:relative}
-  .bar > i{display:block; height:100%; width:0;
-    background:linear-gradient(180deg,var(--xp),var(--xp2)); transition:width .5s ease}
-  .bar .lab{position:absolute; inset:0; display:grid; place-items:center;
-    font-size:9px; color:#dff6ff; text-shadow:1px 1px 0 rgba(0,0,0,.6)}
+  .bar > i{display:block; height:100%; width:0; background:linear-gradient(180deg,var(--xp),var(--xp2)); transition:width .5s ease}
+  .bar.hpbar > i{background:linear-gradient(180deg,var(--hp),var(--hp2))}
+  .bar .lab{position:absolute; inset:0; display:grid; place-items:center; font-size:9px; color:#eef; text-shadow:1px 1px 0 rgba(0,0,0,.6)}
   .chips{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
-  .chip{font-size:11px; background:#180f36; border:1px solid var(--line);
-    padding:5px 9px; border-radius:20px; color:var(--muted)}
+  .chip{font-size:11px; background:#180f36; border:1px solid var(--line); padding:5px 9px; border-radius:20px; color:var(--muted)}
   .chip b{color:var(--ink)}
+  .chip.mult{color:#0c261a; background:linear-gradient(180deg,var(--green),#3fbf80); border-color:#3fbf80; font-weight:700}
+  .chip.gold{color:#241a4d; background:linear-gradient(180deg,var(--gold),var(--gold2)); border-color:var(--gold2); font-weight:700}
   .hearts{letter-spacing:2px; font-size:13px}
 
   /* ---- Tabs ---- */
-  .tabs{display:flex; gap:8px; margin:16px 0 12px}
-  .tab{flex:1; text-align:center; padding:10px; border-radius:10px; font-size:13px;
-    background:var(--panel); border:2px solid var(--line); color:var(--muted);
-    box-shadow:var(--shadow); cursor:pointer; user-select:none}
-  .tab.on{color:#241a4d; background:linear-gradient(180deg,var(--gold),var(--gold2));
-    border-color:var(--gold2); font-weight:700}
+  .tabs{display:flex; gap:6px; margin:16px 0 12px}
+  .tab{flex:1; text-align:center; padding:9px 3px; border-radius:10px; font-size:11px;
+    background:var(--panel); border:2px solid var(--line); color:var(--muted); box-shadow:var(--shadow); cursor:pointer; user-select:none; line-height:1.5}
+  .tab .ic{font-size:16px; display:block}
+  .tab.on{color:#241a4d; background:linear-gradient(180deg,var(--gold),var(--gold2)); border-color:var(--gold2); font-weight:700}
+
+  /* ---- Boss ---- */
+  .boss{background:linear-gradient(180deg,#3a1730,#2a1226); border:2px solid #6b2347; border-radius:12px;
+    padding:12px; margin-bottom:14px; box-shadow:var(--shadow)}
+  .boss.dead{opacity:.7; filter:grayscale(.4)}
+  .bossTop{display:flex; align-items:center; gap:8px}
+  .bossEmoji{font-size:30px; line-height:1}
+  .bossName{font-size:15px; font-weight:700; flex:1}
+  .bossTag{font-size:9px; color:#ff9ec0; background:#4a1730; border:1px solid #6b2347; padding:3px 7px; border-radius:20px}
+  .bossHint{font-size:10px; color:#d79ab5; margin-top:8px; line-height:1.5}
 
   /* ---- Quests ---- */
-  .quest{
-    background:var(--panel); border:2px solid var(--line); border-radius:12px;
-    padding:12px; margin-bottom:12px; box-shadow:var(--shadow); position:relative;
-    transition:border-color .2s, background .2s;
-  }
+  .quest{background:var(--panel); border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; transition:.2s}
   .quest.done{border-color:var(--green); background:#1c2b3a}
   .qtop{display:flex; gap:10px; align-items:flex-start}
   .qemoji{font-size:26px; line-height:1}
@@ -82,28 +82,21 @@
   .qname{font-size:15px; font-weight:700}
   .qdesc{font-size:11px; color:var(--muted); margin-top:3px; line-height:1.5}
   .qxp{font-size:10px; color:var(--gold); margin-top:6px}
-  .check{
-    width:34px; height:34px; flex:0 0 auto; border-radius:9px; cursor:pointer;
-    border:2px solid var(--line); background:#160f30; display:grid; place-items:center;
-    font-size:18px; color:transparent; transition:.15s;
-  }
+  .check{width:34px; height:34px; flex:0 0 auto; border-radius:9px; cursor:pointer; border:2px solid var(--line);
+    background:#160f30; display:grid; place-items:center; font-size:18px; color:transparent; transition:.15s}
   .quest.done .check{background:var(--green); border-color:var(--green); color:#0c261a}
-  .stepper{display:flex; align-items:center; gap:0; margin-top:10px;
-    background:#160f30; border:1px solid var(--line); border-radius:10px; width:max-content}
-  .stepper button{width:38px; height:34px; border:0; background:transparent; color:var(--gold);
-    font-size:20px; cursor:pointer; font-family:inherit}
+  .stepper{display:flex; align-items:center; margin-top:10px; background:#160f30; border:1px solid var(--line); border-radius:10px; width:max-content}
+  .stepper button{width:38px; height:34px; border:0; background:transparent; color:var(--gold); font-size:20px; cursor:pointer; font-family:inherit}
   .stepper .n{min-width:52px; text-align:center; font-size:14px}
   .stepper .unit{font-size:10px; color:var(--muted); padding:0 10px 0 2px}
 
   /* ---- Calendar ---- */
   .calhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
-  .calhead button{width:40px; height:36px; border-radius:9px; border:2px solid var(--line);
-    background:var(--panel); color:var(--gold); font-size:18px; cursor:pointer; box-shadow:var(--shadow)}
+  .calhead button{width:40px; height:36px; border-radius:9px; border:2px solid var(--line); background:var(--panel); color:var(--gold); font-size:18px; cursor:pointer; box-shadow:var(--shadow)}
   .calhead .mon{font-size:15px; color:var(--gold)}
   .cal{display:grid; grid-template-columns:repeat(7,1fr); gap:5px}
   .dow{font-size:10px; color:var(--muted); text-align:center; padding-bottom:2px}
-  .cell{aspect-ratio:1; border-radius:8px; background:var(--heat0); border:1px solid var(--line);
-    position:relative; display:grid; place-items:center; font-size:11px; color:var(--muted); cursor:default}
+  .cell{aspect-ratio:1; border-radius:8px; background:var(--heat0); border:1px solid var(--line); position:relative; display:grid; place-items:center; font-size:11px; color:var(--muted)}
   .cell.h1{background:var(--heat1); color:#dfeee7}
   .cell.h2{background:var(--heat2); color:#0c261a}
   .cell.h3{background:var(--heat3); color:#0c261a; border-color:var(--green)}
@@ -112,31 +105,44 @@
   .cell .star{position:absolute; top:1px; right:3px; font-size:9px}
   .cell.empty{background:transparent; border:0}
   .calsum{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap}
-  .calsum .box{flex:1; min-width:90px; background:var(--panel); border:2px solid var(--line);
-    border-radius:10px; padding:10px; text-align:center; box-shadow:var(--shadow)}
+  .calsum .box{flex:1; min-width:90px; background:var(--panel); border:2px solid var(--line); border-radius:10px; padding:10px; text-align:center; box-shadow:var(--shadow)}
   .calsum .box b{display:block; font-size:20px; color:var(--gold)}
   .calsum .box span{font-size:10px; color:var(--muted)}
 
-  /* ---- Popover ---- */
-  .pop{position:fixed; inset:0; background:rgba(8,5,20,.6); display:none;
-    place-items:center; z-index:40; padding:20px}
-  .pop.on{display:grid}
-  .popcard{background:var(--panel2); border:2px solid var(--line); border-radius:14px;
-    padding:18px; max-width:320px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,.5)}
-  .popcard h3{font-size:14px; color:var(--gold); margin-bottom:12px}
-  .poprow{display:flex; justify-content:space-between; font-size:13px; padding:7px 0;
-    border-bottom:1px dashed var(--line)}
-  .poprow:last-of-type{border-bottom:0}
-  .popcard button{margin-top:14px; width:100%; padding:11px; border-radius:10px; border:0;
-    background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700;
-    font-family:inherit; font-size:14px; cursor:pointer}
+  /* ---- Achievements ---- */
+  .secTitle{font-size:12px; color:var(--gold); letter-spacing:1px; margin:6px 2px 10px}
+  .achGrid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px}
+  .achCard{background:var(--panel); border:2px solid var(--line); border-radius:11px; padding:10px 6px; text-align:center; box-shadow:var(--shadow)}
+  .achCard.got{border-color:var(--gold); background:#2c2352}
+  .achCard .aic{font-size:24px}
+  .achCard.locked .aic{filter:grayscale(1); opacity:.35}
+  .achCard .an{font-size:10px; margin-top:5px; font-weight:700; line-height:1.3}
+  .achCard .ad{font-size:9px; color:var(--muted); margin-top:3px; line-height:1.3}
+  .achCard.locked .an{color:var(--muted)}
+  .titleChips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .tchip{font-size:11px; padding:6px 11px; border-radius:20px; border:2px solid var(--line); background:var(--panel); color:var(--muted); cursor:pointer}
+  .tchip.on{color:#241a4d; background:linear-gradient(180deg,var(--gold),var(--gold2)); border-color:var(--gold2); font-weight:700}
 
-  /* ---- Toast / levelup ---- */
-  #toast{position:fixed; left:50%; top:16%; transform:translateX(-50%) scale(.8);
-    background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d;
-    font-weight:700; padding:14px 22px; border-radius:12px; font-size:16px; z-index:60;
-    opacity:0; pointer-events:none; transition:.35s; box-shadow:0 8px 24px rgba(0,0,0,.5);
-    text-align:center; border:2px solid #fff3d0}
+  /* ---- Shop ---- */
+  .shopBal{text-align:center; font-size:14px; color:var(--gold); margin-bottom:12px; font-weight:700}
+  .shopGrid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:16px}
+  .shopCard{background:var(--panel); border:2px solid var(--line); border-radius:11px; padding:9px 6px; text-align:center; box-shadow:var(--shadow); cursor:pointer}
+  .shopCard.equipped{border-color:var(--green); background:#1c2b3a}
+  .shopCard .sic{font-size:26px}
+  .shopCard .sn{font-size:10px; margin-top:5px; line-height:1.3; min-height:26px; display:flex; align-items:center; justify-content:center}
+  .shopCard .sp{font-size:11px; margin-top:4px; color:var(--gold)}
+  .shopCard .sp.owned{color:var(--green)}
+  .shopCard .sp.eq{color:var(--green); font-weight:700}
+
+  /* ---- Popover / Toast / FX ---- */
+  .pop{position:fixed; inset:0; background:rgba(8,5,20,.6); display:none; place-items:center; z-index:40; padding:20px}
+  .pop.on{display:grid}
+  .popcard{background:var(--panel2); border:2px solid var(--line); border-radius:14px; padding:18px; max-width:320px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .popcard h3{font-size:14px; color:var(--gold); margin-bottom:12px}
+  .poprow{display:flex; justify-content:space-between; font-size:13px; padding:7px 0; border-bottom:1px dashed var(--line)}
+  .poprow:last-of-type{border-bottom:0}
+  .popcard button{margin-top:14px; width:100%; padding:11px; border-radius:10px; border:0; background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700; font-family:inherit; font-size:14px; cursor:pointer}
+  #toast{position:fixed; left:50%; top:14%; transform:translateX(-50%) scale(.8); background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700; padding:13px 20px; border-radius:12px; font-size:15px; z-index:60; opacity:0; pointer-events:none; transition:.35s; box-shadow:0 8px 24px rgba(0,0,0,.5); text-align:center; border:2px solid #fff3d0; max-width:82%}
   #toast.show{opacity:1; transform:translateX(-50%) scale(1)}
   #toast small{display:block; font-size:11px; font-weight:400; margin-top:2px}
   #flash{position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:50}
@@ -157,11 +163,13 @@
           <span class="lv pix" id="lvNum">Lv.1</span>
           <span class="cls" id="clsName">見習いセラー</span>
         </div>
+        <div><span class="titleChip" id="titleChip">見習い商人</span></div>
         <div class="bar"><i id="xpFill"></i><span class="lab" id="xpLab">0 / 100 XP</span></div>
         <div class="chips">
           <span class="chip">🔥 連続 <b id="streak">0</b>日</span>
-          <span class="chip">今日の気力 <span class="hearts" id="hearts">♡♡♡</span></span>
-          <span class="chip">累計 <b id="totalXp">0</b> XP</span>
+          <span class="chip mult" id="multChip">XP x1.0</span>
+          <span class="chip gold">🪙 <b id="gold">0</b></span>
+          <span class="chip">気力 <span class="hearts" id="hearts">♡♡♡</span></span>
         </div>
       </div>
     </div>
@@ -169,15 +177,17 @@
 
   <!-- TABS -->
   <div class="tabs">
-    <div class="tab on" id="tabQuest" onclick="showView('quest')">⚔ クエスト</div>
-    <div class="tab" id="tabCal" onclick="showView('cal')">📅 カレンダー</div>
+    <div class="tab on" id="tab-quest" onclick="showView('quest')"><span class="ic">⚔️</span>クエスト</div>
+    <div class="tab" id="tab-cal" onclick="showView('cal')"><span class="ic">📅</span>カレンダー</div>
+    <div class="tab" id="tab-ach" onclick="showView('ach')"><span class="ic">🏆</span>実績</div>
+    <div class="tab" id="tab-shop" onclick="showView('shop')"><span class="ic">🛒</span>ショップ</div>
   </div>
 
-  <!-- QUEST VIEW -->
-  <div class="view on" id="viewQuest"></div>
+  <!-- QUEST -->
+  <div class="view on" id="view-quest"></div>
 
-  <!-- CALENDAR VIEW -->
-  <div class="view" id="viewCal">
+  <!-- CALENDAR -->
+  <div class="view" id="view-cal">
     <div class="calhead">
       <button onclick="calMove(-1)">‹</button>
       <div class="mon pix" id="calMon"></div>
@@ -192,293 +202,355 @@
     <div class="footer">セルをタップするとその日の内訳が見られます</div>
   </div>
 
-  <div class="footer">
-    データはこの端末内だけに保存されます。<br>
-    ホーム画面に追加してアプリのように使えます。
+  <!-- ACHIEVEMENTS -->
+  <div class="view" id="view-ach">
+    <div class="secTitle">称号（タップで変更）</div>
+    <div class="titleChips" id="titleChips"></div>
+    <div class="secTitle">実績バッジ</div>
+    <div class="achGrid" id="achGrid"></div>
   </div>
+
+  <!-- SHOP -->
+  <div class="view" id="view-shop">
+    <div class="shopBal">所持ゴールド 🪙 <span id="shopGold">0</span></div>
+    <div class="secTitle">👒 ぼうし</div>
+    <div class="shopGrid" id="shopHat"></div>
+    <div class="secTitle">🧥 ローブの色</div>
+    <div class="shopGrid" id="shopRobe"></div>
+    <div class="secTitle">🖼️ せなかの背景</div>
+    <div class="shopGrid" id="shopBg"></div>
+    <div class="footer">作業でゴールドを稼いで、自分だけのヒーローに！</div>
+  </div>
+
+  <div class="footer">データはこの端末内だけに保存されます。<br>ホーム画面に追加してアプリのように使えます。</div>
 </div>
 
 <div class="pop" id="pop" onclick="if(event.target===this)closePop()">
-  <div class="popcard">
-    <h3 id="popTitle"></h3>
-    <div id="popBody"></div>
-    <button onclick="closePop()">とじる</button>
-  </div>
+  <div class="popcard"><h3 id="popTitle"></h3><div id="popBody"></div><button onclick="closePop()">とじる</button></div>
 </div>
 <div id="toast"></div>
 <div id="flash"></div>
 
 <script>
-/* ============ Data / constants ============ */
+/* ================= Constants ================= */
 const KEY='ebayQuestSave';
 const QUESTS=[
-  {id:'research',  emoji:'🔍', name:'新規出品リサーチ', unit:'候補',
-   desc:'テラピークで90日2個以上売れた商品を探し、国内在庫と相場から出品候補を洗い出す。'},
-  {id:'pricecheck',emoji:'💰', name:'最安値チェック',   unit:'件',
-   desc:'自分の出品が検索内で最安値か確認。同条件で負けていれば価格見直しを検討。'},
-  {id:'restock',   emoji:'📦', name:'在庫補充',         unit:'件',
-   desc:'在庫切れ商品を特定し、国内在庫と利益を確認して再出品・補充する。'},
+  {id:'research',  emoji:'🔍', name:'新規出品リサーチ', unit:'候補', desc:'テラピークで90日2個以上売れた商品を探し、国内在庫と相場から出品候補を洗い出す。'},
+  {id:'pricecheck',emoji:'💰', name:'最安値チェック',   unit:'件',   desc:'自分の出品が検索内で最安値か確認。同条件で負けていれば価格見直しを検討。'},
+  {id:'restock',   emoji:'📦', name:'在庫補充',         unit:'件',   desc:'在庫切れ商品を特定し、国内在庫と利益を確認して再出品・補充する。'},
 ];
-const XP_DONE=20, XP_PER_ITEM=5, ITEM_CAP=20;
-const CLASSES=[ // level threshold -> class name + hero tier
-  {min:20, name:'マスターセラー', tier:3},
-  {min:10, name:'ベテランセラー', tier:2},
-  {min:5,  name:'熟練セラー',     tier:1},
-  {min:1,  name:'見習いセラー',   tier:0},
+const XP_DONE=20, XP_PER_ITEM=5, ITEM_CAP=20, PERFECT_BONUS=60;
+const CLASSES=[{min:20,name:'マスターセラー',tier:3},{min:10,name:'ベテランセラー',tier:2},{min:5,name:'熟練セラー',tier:1},{min:1,name:'見習いセラー',tier:0}];
+const BOSSES=[
+  {name:'値下げドラゴン',emoji:'🐉'},{name:'在庫ゴーレム',emoji:'🗿'},{name:'返品スペクター',emoji:'👻'},
+  {name:'手数料インプ',emoji:'😈'},{name:'ライバルナイト',emoji:'🛡️'},{name:'円安クラーケン',emoji:'🐙'},{name:'不良在庫スライム',emoji:'🟢'}
 ];
-function xpForLevel(lv){return 50 + lv*50;}
-function todayStr(d){d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function addDays(str,n){const [y,m,d]=str.split('-').map(Number); const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+n); return todayStr(dt);}
+const TIER_ROBE=[['#6b8cff','#3f5bd6'],['#8b6bff','#5b3fd6'],['#e0603c','#b8401f'],['#ffd257','#e0a020']];
+const ROBECOLORS={crimson:['#e0455f','#a02038'],emerald:['#3fd67a','#1f9850'],shadow:['#4a4368','#2a2340']};
+const BGS={default:'radial-gradient(circle at 50% 35%,#3b2d78,#1b1440)',dawn:'radial-gradient(circle at 50% 30%,#ff9a5a,#6a2d5a)',galaxy:'radial-gradient(circle at 50% 35%,#2a3d8f,#0a0a2a)'};
+const SHOP={
+  hat:[{id:'none',name:'なし',price:0,emoji:'🚫'},{id:'straw',name:'麦わら帽子',price:30,emoji:'👒'},{id:'wizard',name:'魔法使いの帽子',price:70,emoji:'🧙'},{id:'halo',name:'天使の輪',price:150,emoji:'😇'}],
+  robe:[{id:'default',name:'標準ローブ',price:0,emoji:'👕'},{id:'crimson',name:'紅のローブ',price:40,emoji:'🟥'},{id:'emerald',name:'翠のローブ',price:40,emoji:'🟩'},{id:'shadow',name:'漆黒のローブ',price:90,emoji:'⬛'}],
+  bg:[{id:'default',name:'標準背景',price:0,emoji:'🟪'},{id:'dawn',name:'暁の背景',price:60,emoji:'🌅'},{id:'galaxy',name:'銀河の背景',price:120,emoji:'🌌'}]
+};
+const TITLES={novice:'見習い商人',regular:'常連',perfect_attend:'皆勤の商人',unbreakable:'不屈の商人',veteran:'ベテラン',legend:'伝説のセラー',oni:'商いの鬼',perfectionist:'完璧主義者',bosshunter:'ボスハンター',demonslayer:'魔王殺し'};
+const ACHIEVEMENTS=[
+  {id:'first_quest',name:'はじめの一歩',desc:'初クエスト完了',icon:'🎯',cond:()=>cumQuests()>=1,reward:{gold:10}},
+  {id:'streak3',name:'三日坊主脱出',desc:'3日連続達成',icon:'🔥',cond:()=>S.streak>=3,reward:{gold:20},title:'regular'},
+  {id:'streak7',name:'週間皆勤',desc:'7日連続達成',icon:'📅',cond:()=>S.streak>=7,reward:{gold:50,xp:50},title:'perfect_attend'},
+  {id:'streak30',name:'鉄の意志',desc:'30日連続達成',icon:'💎',cond:()=>S.streak>=30,reward:{gold:200,xp:200},title:'unbreakable'},
+  {id:'level5',name:'熟練の証',desc:'Lv5に到達',icon:'⭐',cond:()=>S.level>=5,reward:{gold:20}},
+  {id:'level10',name:'ベテランの風格',desc:'Lv10に到達',icon:'🌟',cond:()=>S.level>=10,reward:{gold:50},title:'veteran'},
+  {id:'level20',name:'頂点',desc:'Lv20に到達',icon:'👑',cond:()=>S.level>=20,reward:{gold:150,xp:150},title:'legend'},
+  {id:'items100',name:'百戦錬磨',desc:'累計100件',icon:'📦',cond:()=>cumItems()>=100,reward:{gold:40}},
+  {id:'items500',name:'商いの鬼',desc:'累計500件',icon:'🏭',cond:()=>cumItems()>=500,reward:{gold:150},title:'oni'},
+  {id:'perfect1',name:'完璧な一日',desc:'初パーフェクト',icon:'✨',cond:()=>S.stats.perfectDays>=1,reward:{gold:20}},
+  {id:'perfect10',name:'完璧主義者',desc:'パーフェクト10回',icon:'🌈',cond:()=>S.stats.perfectDays>=10,reward:{gold:80,xp:80},title:'perfectionist'},
+  {id:'boss1',name:'ボスハンター',desc:'初ボス討伐',icon:'⚔️',cond:()=>S.stats.bossesDefeated>=1,reward:{gold:30},title:'bosshunter'},
+  {id:'boss5',name:'魔王討伐',desc:'ボス5体討伐',icon:'🗡️',cond:()=>S.stats.bossesDefeated>=5,reward:{gold:120,xp:120},title:'demonslayer'},
+  {id:'rich',name:'成金',desc:'ゴールド累計500',icon:'💰',cond:()=>S.stats.goldTotal>=500,reward:{}},
+];
 
-/* ============ State ============ */
-let S=load();
+/* ================= Date helpers ================= */
+function todayStr(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function addDays(str,n){const[y,m,d]=str.split('-').map(Number);const dt=new Date(y,m-1,d);dt.setDate(dt.getDate()+n);return todayStr(dt);}
+function weekKey(d){const t=new Date(d||new Date());t.setHours(0,0,0,0);t.setDate(t.getDate()+3-((t.getDay()+6)%7));const w1=new Date(t.getFullYear(),0,4);const wk=1+Math.round(((t-w1)/86400000-3+((w1.getDay()+6)%7))/7);return t.getFullYear()+'-W'+String(wk).padStart(2,'0');}
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 
+/* ================= State ================= */
 function freshQuests(){return {research:{done:false,count:0},pricecheck:{done:false,count:0},restock:{done:false,count:0}};}
-function defaultState(){
-  return {level:1, xp:0, totalXp:0, streak:0, bestStreak:0,
-    lastCompletedDate:null, todayDate:todayStr(), quests:freshQuests(), history:{}};
-}
+function defaultState(){return {
+  xpCommitted:0, bonusXp:0, totalXp:0, level:1, xp:0, _need:xpForLevel(1),
+  streak:0, bestStreak:0, lastCompletedDate:null, todayDate:todayStr(),
+  quests:freshQuests(), history:{}, gold:0, todayPeakXp:0, perfectCountedToday:false,
+  boss:null, achievements:{}, unlockedTitles:['novice'], title:'novice',
+  cosmetics:{hat:'none',robe:'default',bg:'default'},
+  owned:{hat:['none'],robe:['default'],bg:['default']},
+  stats:{totalItems:0,totalQuests:0,perfectDays:0,bossesDefeated:0,goldTotal:0}
+};}
 function load(){
-  try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.quests){ // migrate missing keys
-    return Object.assign(defaultState(), s);}}catch(e){}
+  try{const s=JSON.parse(localStorage.getItem(KEY));
+    if(s&&s.quests){const d=defaultState();
+      const st=Object.assign(d,s);
+      st.stats=Object.assign(d.stats,s.stats||{});
+      st.cosmetics=Object.assign(d.cosmetics,s.cosmetics||{});
+      st.owned=Object.assign(d.owned,s.owned||{});
+      return st;
+    }}catch(e){}
   return defaultState();
 }
-function save(){localStorage.setItem(KEY, JSON.stringify(S));}
+function save(){localStorage.setItem(KEY,JSON.stringify(S));}
+let S=load();
 
-/* Roll over the day: commit yesterday's progress into history, reset quests, handle streak */
+/* ================= XP / level ================= */
+function xpForLevel(lv){return 50+lv*50;}
+function deriveLevel(total){let L=1,rem=total;while(rem>=xpForLevel(L)){rem-=xpForLevel(L);L++;}return {level:L,xp:rem,need:xpForLevel(L)};}
+function computeTodayBaseXp(){let b=0;for(const k in S.quests){if(S.quests[k].done)b+=XP_DONE;b+=Math.min(S.quests[k].count,ITEM_CAP)*XP_PER_ITEM;}return b;}
+function allDoneToday(){return Object.values(S.quests).every(q=>q.done);}
+function streakMult(){return 1+Math.min(S.streak,10)*0.05;}
+function computeTodayXp(){let xp=Math.round(computeTodayBaseXp()*streakMult());if(allDoneToday())xp+=PERFECT_BONUS;return xp;}
+function classFor(lv){for(const c of CLASSES){if(lv>=c.min)return c;}return CLASSES[CLASSES.length-1];}
+
+/* ================= Cumulative (committed + today) ================= */
+function todayItems(){let t=0;for(const k in S.quests)t+=S.quests[k].count;return t;}
+function todayDone(){let t=0;for(const k in S.quests)if(S.quests[k].done)t++;return t;}
+function cumItems(){return S.stats.totalItems+todayItems();}
+function cumQuests(){return S.stats.totalQuests+todayDone();}
+
+/* ================= Boss ================= */
+function ensureBoss(){const wk=weekKey();if(!S.boss||S.boss.week!==wk){const b=BOSSES[hashStr(wk)%BOSSES.length];const maxHp=500+S.level*25;S.boss={week:wk,name:b.name,emoji:b.emoji,maxHp,hp:maxHp,defeated:false};}}
+function onBossDefeat(){S.stats.bossesDefeated++;earnGold(120);S.bonusXp+=80;flashFx();pushToast('🎉 '+S.boss.name+'を討伐！<small>報酬 🪙120 ＋80XP</small>',2400);}
+
+/* ================= Gold ================= */
+function earnGold(n){if(n<=0)return;S.gold+=n;S.stats.goldTotal+=n;}
+
+/* ================= Recompute (pure-ish) ================= */
+function recompute(animate){
+  ensureBoss();
+  const prevLevel=S.level;
+  const todayXp=computeTodayXp();
+  if(todayXp>S.todayPeakXp){
+    const delta=todayXp-S.todayPeakXp;
+    if(S.boss&&!S.boss.defeated){S.boss.hp-=delta;if(S.boss.hp<=0){S.boss.hp=0;S.boss.defeated=true;onBossDefeat();}}
+    const g=Math.floor(todayXp/4)-Math.floor(S.todayPeakXp/4);if(g>0)earnGold(g);
+    S.todayPeakXp=todayXp;
+  }
+  if(allDoneToday()&&!S.perfectCountedToday){S.perfectCountedToday=true;S.stats.perfectDays++;pushToast('⭐ パーフェクトデイ！<small>3クエスト完了 ＋'+PERFECT_BONUS+'XPボーナス</small>',2200);}
+  checkAchievements();
+  S.totalXp=S.xpCommitted+S.bonusXp+todayXp;
+  const info=deriveLevel(S.totalXp);S.level=info.level;S.xp=info.xp;S._need=info.need;
+  if(animate&&S.level>prevLevel)levelUpFx(S.level);
+  commitToHistory(S.todayDate,todayXp);
+}
+
+/* ================= History ================= */
+function commitToHistory(date,xp){
+  const items=todayItems(),done=todayDone();
+  if(done>0||items>0){S.history[date]={done,counts:{research:S.quests.research.count,pricecheck:S.quests.pricecheck.count,restock:S.quests.restock.count},xp};}
+  else delete S.history[date];
+}
+
+/* ================= Rollover ================= */
 function rollover(){
   const today=todayStr();
   if(S.todayDate!==today){
-    // finalize the stored day into history (already mirrored, but ensure)
-    commitToHistory(S.todayDate);
-    // streak: was yesterday a completed day?
-    if(S.lastCompletedDate && S.lastCompletedDate!==today){
-      if(S.lastCompletedDate < addDays(today,-1)) S.streak=0; // gap of 2+ days
-    }
+    const finalXp=computeTodayXp();
+    S.xpCommitted+=finalXp;
+    commitToHistory(S.todayDate,finalXp);
+    S.stats.totalItems+=todayItems();
+    S.stats.totalQuests+=todayDone();
+    if(S.lastCompletedDate&&S.lastCompletedDate<addDays(today,-1))S.streak=0;
     S.quests=freshQuests();
-    S.todayDate=today;
-    save();
+    S.todayDate=today; S.todayPeakXp=0; S.perfectCountedToday=false;
+    ensureBoss(); save();
   }
 }
-function daySummary(q){
-  let done=0, items=0, xp=0;
-  for(const k in q){ if(q[k].done){done++; xp+=XP_DONE;} const c=Math.min(q[k].count,ITEM_CAP); items+=q[k].count; xp+=c*XP_PER_ITEM; }
-  return {done, items, xp, counts:{research:q.research.count,pricecheck:q.pricecheck.count,restock:q.restock.count}};
-}
-function commitToHistory(date){
-  const s=daySummary(S.quests);
-  if(s.done>0 || s.items>0){ S.history[date]={done:s.done, counts:s.counts, xp:s.xp}; }
-  else { delete S.history[date]; }
+
+/* ================= Streak ================= */
+function markCompletedToday(){const t=todayStr();if(S.lastCompletedDate===t)return;S.streak=(S.lastCompletedDate===addDays(t,-1))?S.streak+1:1;S.lastCompletedDate=t;if(S.streak>S.bestStreak)S.bestStreak=S.streak;}
+function unmarkToday(){const t=todayStr();if(S.lastCompletedDate!==t)return;S.streak=Math.max(0,S.streak-1);S.lastCompletedDate=S.streak>0?addDays(t,-1):null;}
+
+/* ================= Achievements ================= */
+function checkAchievements(){
+  for(const a of ACHIEVEMENTS){
+    if(!S.achievements[a.id]&&a.cond()){
+      S.achievements[a.id]=true;
+      if(a.reward){if(a.reward.gold)earnGold(a.reward.gold);if(a.reward.xp)S.bonusXp+=a.reward.xp;}
+      if(a.title&&!S.unlockedTitles.includes(a.title))S.unlockedTitles.push(a.title);
+      const rw=[]; if(a.reward&&a.reward.gold)rw.push('🪙'+a.reward.gold); if(a.reward&&a.reward.xp)rw.push('+'+a.reward.xp+'XP');
+      pushToast('🏆 実績解除「'+a.name+'」'+(rw.length?'<small>'+rw.join(' ')+(a.title?' ／ 称号「'+TITLES[a.title]+'」':'')+'</small>':''),2200);
+    }
+  }
 }
 
-/* ============ Actions ============ */
-function grantXpDelta(delta){
-  if(delta===0) return;
-  S.xp += delta; S.totalXp = Math.max(0, S.totalXp+delta);
-  let leveled=0;
-  while(S.xp >= xpForLevel(S.level)){ S.xp -= xpForLevel(S.level); S.level++; leveled++; }
-  while(S.xp < 0 && S.level>1){ S.level--; S.xp += xpForLevel(S.level); } // undo across boundary
-  if(S.xp<0) S.xp=0;
-  if(leveled>0) levelUpFx(S.level);
-}
-// Called when today's FIRST quest gets completed
-function markCompletedToday(){
-  const today=todayStr();
-  if(S.lastCompletedDate===today) return;       // already counted today
-  S.streak = (S.lastCompletedDate===addDays(today,-1)) ? S.streak+1 : 1;
-  S.lastCompletedDate=today;
-  if(S.streak>S.bestStreak) S.bestStreak=S.streak;
-}
-// Called when today's LAST completed quest gets un-done
-function unmarkToday(){
-  const today=todayStr();
-  if(S.lastCompletedDate!==today) return;
-  S.streak=Math.max(0,S.streak-1);
-  S.lastCompletedDate = S.streak>0 ? addDays(today,-1) : null;
-}
+/* ================= Actions ================= */
 function toggleQuest(id){
   rollover();
-  const q=S.quests[id];
-  const wasAny=Object.values(S.quests).some(x=>x.done);
+  const q=S.quests[id], wasAny=Object.values(S.quests).some(x=>x.done);
   q.done=!q.done;
-  grantXpDelta(q.done ? XP_DONE : -XP_DONE);
   const nowAny=Object.values(S.quests).some(x=>x.done);
-  if(!wasAny && nowAny) markCompletedToday();
-  else if(wasAny && !nowAny) unmarkToday();
-  commitToHistory(S.todayDate);
-  save(); render();
+  if(!wasAny&&nowAny)markCompletedToday(); else if(wasAny&&!nowAny)unmarkToday();
+  recompute(true); save(); render();
 }
-function step(id,delta){
-  rollover();
-  const q=S.quests[id];
-  const before=Math.min(q.count,ITEM_CAP);
-  q.count=Math.max(0, q.count+delta);
-  const after=Math.min(q.count,ITEM_CAP);
-  grantXpDelta((after-before)*XP_PER_ITEM);
-  commitToHistory(S.todayDate);
-  save(); render();
+function step(id,delta){rollover();const q=S.quests[id];q.count=Math.max(0,q.count+delta);recompute(true);save();render();}
+function buyItem(cat,id){
+  const item=SHOP[cat].find(x=>x.id===id);if(!item)return;
+  if(S.owned[cat].includes(id)){S.cosmetics[cat]=id;save();render();return;}
+  if(S.gold<item.price){pushToast('🪙 ゴールドが足りません<small>あと '+(item.price-S.gold)+' 必要</small>',1600);return;}
+  S.gold-=item.price;S.owned[cat].push(id);S.cosmetics[cat]=id;save();render();
+  pushToast('🛒 '+item.name+' を購入！',1500);
 }
+function setTitle(id){if(!S.unlockedTitles.includes(id))return;S.title=id;save();render();}
 
-/* ============ Hero pixel art (inline SVG, 4 tiers) ============ */
-function heroSVG(tier){
-  // simple 11x11-ish pixel hero, palette shifts by tier
-  const skin='#f6c89a', outline='#0c0820';
-  const robe=['#6b8cff','#8b6bff','#e0603c','#ffd257'][tier];
-  const robe2=['#3f5bd6','#5b3fd6','#b8401f','#e0a020'][tier];
-  const hair=['#3a2d1a','#3a2d1a','#2a1a3a','#5a3a10'][tier];
-  const gem=['#54d6ff','#8bffcf','#ff8bd6','#fff2a0'][tier];
-  const crown = tier>=2;
+/* ================= Hero pixel art ================= */
+function heroSVG(tier,cos){
+  cos=cos||{hat:'none',robe:'default'};
+  const rc=(cos.robe&&cos.robe!=='default'&&ROBECOLORS[cos.robe])?ROBECOLORS[cos.robe]:TIER_ROBE[tier];
+  const robe=rc[0],robe2=rc[1];
+  const skin='#f6c89a',outline='#0c0820',hair='#3a2d1a',gem='#ffd257';
   const P=(x,y,c)=>`<rect x="${x}" y="${y}" width="1" height="1" fill="${c}"/>`;
-  let s=`<svg viewBox="0 0 11 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">`;
-  // hair / crown row
-  if(crown){ s+=P(3,0,'#ffd257')+P(5,0,'#ffd257')+P(7,0,'#ffd257')+P(4,0,'#ffb23e')+P(6,0,'#ffb23e'); }
-  else { for(let x=3;x<=7;x++) s+=P(x,0,hair); }
+  let s=`<svg viewBox="0 -3 11 16" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">`;
+  // hair base
+  for(let x=3;x<=7;x++)s+=P(x,0,hair);
+  s+=P(3,1,hair)+P(7,1,hair);
   // head
-  for(let x=3;x<=7;x++) s+=P(x,1,hair);
-  s+=P(3,2,hair)+P(7,2,hair);
-  for(let x=4;x<=6;x++) s+=P(x,2,skin);
-  for(let x=3;x<=7;x++) s+=P(x,3,skin);
-  s+=P(4,3,outline)+P(6,3,outline); // eyes
-  for(let x=3;x<=7;x++) s+=P(x,4,skin);
-  s+=P(5,4,'#d98');
-  // body / robe
-  for(let x=2;x<=8;x++) s+=P(x,5,robe);
-  s+=P(5,5,gem);
-  for(let x=2;x<=8;x++) s+=P(x,6,robe);
-  s+=P(2,6,skin)+P(8,6,skin); // hands
-  for(let x=3;x<=7;x++) s+=P(x,7,robe2);
-  for(let x=3;x<=7;x++) s+=P(x,8,robe2);
-  s+=P(5,8,robe);
-  for(let x=3;x<=7;x++) s+=P(x,9,robe2);
-  // legs
-  s+=P(4,10,'#2a2350')+P(6,10,'#2a2350');
-  s+=P(4,11,'#1a1540')+P(6,11,'#1a1540');
+  for(let x=3;x<=7;x++)s+=P(x,1,skin===skin&&x>3&&x<7?skin:hair);
+  for(let x=4;x<=6;x++)s+=P(x,1,skin);
+  s+=P(3,2,hair)+P(7,2,hair);for(let x=4;x<=6;x++)s+=P(x,2,skin);
+  for(let x=3;x<=7;x++)s+=P(x,3,skin);s+=P(4,3,outline)+P(6,3,outline);
+  for(let x=3;x<=7;x++)s+=P(x,4,skin);s+=P(5,4,'#dd9988');
+  // body
+  for(let x=2;x<=8;x++)s+=P(x,5,robe);s+=P(5,5,gem);
+  for(let x=2;x<=8;x++)s+=P(x,6,robe);s+=P(2,6,skin)+P(8,6,skin);
+  for(let x=3;x<=7;x++)s+=P(x,7,robe2);
+  for(let x=3;x<=7;x++)s+=P(x,8,robe2);s+=P(5,8,robe);
+  for(let x=3;x<=7;x++)s+=P(x,9,robe2);
+  s+=P(4,10,'#2a2350')+P(6,10,'#2a2350')+P(4,11,'#1a1540')+P(6,11,'#1a1540');
+  // hat / crown
+  const hat=cos.hat||'none';
+  if(hat==='none'){ if(tier>=2){s+=P(3,0,'#ffd257')+P(5,0,'#ffd257')+P(7,0,'#ffd257')+P(4,-1,'#ffb23e')+P(6,-1,'#ffb23e')+P(5,-1,'#ffd257');} }
+  else if(hat==='straw'){ for(let x=1;x<=9;x++)s+=P(x,0,'#d8b06a'); for(let x=3;x<=7;x++)s+=P(x,-1,'#e6c988'); for(let x=4;x<=6;x++)s+=P(x,-2,'#e6c988'); }
+  else if(hat==='wizard'){ for(let x=2;x<=8;x++)s+=P(x,0,'#5b3fd6'); for(let x=4;x<=6;x++)s+=P(x,-1,'#6b4fe6'); s+=P(5,-2,'#6b4fe6')+P(5,-3,'#ffd257'); s+=P(3,0,'#ffd257')+P(7,0,'#ffd257'); }
+  else if(hat==='halo'){ s+=P(3,-2,'#ffe98a')+P(4,-2,'#ffe98a')+P(5,-2,'#ffe98a')+P(6,-2,'#ffe98a')+P(7,-2,'#ffe98a')+P(3,-1,'#ffd257')+P(7,-1,'#ffd257'); }
   s+=`</svg>`;
   return s;
 }
-function classFor(lv){ for(const c of CLASSES){ if(lv>=c.min) return c; } return CLASSES[CLASSES.length-1]; }
 
-/* ============ Render ============ */
+/* ================= Render ================= */
 function render(){
   const cls=classFor(S.level);
-  document.getElementById('heroBox').innerHTML=heroSVG(cls.tier);
+  const hb=document.getElementById('heroBox');
+  hb.innerHTML=heroSVG(cls.tier,S.cosmetics);
+  hb.style.background=BGS[S.cosmetics.bg]||BGS.default;
   document.getElementById('lvNum').textContent='Lv.'+S.level;
   document.getElementById('clsName').textContent=cls.name;
-  const need=xpForLevel(S.level);
-  const pct=Math.max(0,Math.min(100, S.xp/need*100));
+  document.getElementById('titleChip').textContent='«'+(TITLES[S.title]||'見習い商人')+'»';
+  const pct=Math.max(0,Math.min(100,S.xp/S._need*100));
   document.getElementById('xpFill').style.width=pct+'%';
-  document.getElementById('xpLab').textContent=S.xp+' / '+need+' XP';
+  document.getElementById('xpLab').textContent=S.xp+' / '+S._need+' XP';
   document.getElementById('streak').textContent=S.streak;
-  document.getElementById('totalXp').textContent=S.totalXp;
-  const doneCount=Object.values(S.quests).filter(q=>q.done).length;
-  document.getElementById('hearts').textContent='♥'.repeat(doneCount)+'♡'.repeat(3-doneCount);
+  document.getElementById('multChip').textContent='XP x'+streakMult().toFixed(1);
+  document.getElementById('gold').textContent=S.gold;
+  const dc=todayDone();
+  document.getElementById('hearts').textContent='♥'.repeat(dc)+'♡'.repeat(3-dc);
 
-  // quests
-  const v=document.getElementById('viewQuest');
-  v.innerHTML=QUESTS.map(Q=>{
-    const q=S.quests[Q.id];
-    const itemXp=Math.min(q.count,ITEM_CAP)*XP_PER_ITEM;
+  // quest view (boss banner + quests)
+  const b=S.boss; const bpct=b?Math.max(0,b.hp/b.maxHp*100):0;
+  const bossHtml=b?`<div class="boss ${b.defeated?'dead':''}">
+      <div class="bossTop"><span class="bossEmoji">${b.defeated?'💀':b.emoji}</span>
+        <span class="bossName">${b.name}</span><span class="bossTag">${b.defeated?'討伐済み ✅':'今週のボス'}</span></div>
+      <div class="bar hpbar"><i style="width:${bpct}%"></i><span class="lab">HP ${b.hp} / ${b.maxHp}</span></div>
+      <div class="bossHint">${b.defeated?'来週、新たなボスが現れる…':'クエスト完了や作業件数がボスへの攻撃になる！週内に討伐で報酬 🪙120 ＋80XP'}</div>
+    </div>`:'';
+  document.getElementById('view-quest').innerHTML=bossHtml+QUESTS.map(Q=>{
+    const q=S.quests[Q.id];const itemXp=Math.min(q.count,ITEM_CAP)*XP_PER_ITEM;
     return `<div class="quest ${q.done?'done':''}">
-      <div class="qtop">
-        <div class="qemoji">${Q.emoji}</div>
-        <div class="qbody">
-          <div class="qname">${Q.name}</div>
-          <div class="qdesc">${Q.desc}</div>
-          <div class="qxp">完了 +${XP_DONE}XP ／ ${Q.unit}ごと +${XP_PER_ITEM}XP（現在 +${(q.done?XP_DONE:0)+itemXp}XP）</div>
-        </div>
-        <div class="check" onclick="toggleQuest('${Q.id}')">✓</div>
-      </div>
-      <div class="stepper">
-        <button onclick="step('${Q.id}',-1)">−</button>
-        <div class="n">${q.count}</div>
-        <button onclick="step('${Q.id}',1)">＋</button>
-        <div class="unit">${Q.unit}</div>
-      </div>
+      <div class="qtop"><div class="qemoji">${Q.emoji}</div>
+        <div class="qbody"><div class="qname">${Q.name}</div><div class="qdesc">${Q.desc}</div>
+          <div class="qxp">完了 +${XP_DONE}XP ／ ${Q.unit}ごと +${XP_PER_ITEM}XP（現在 +${(q.done?XP_DONE:0)+itemXp}XP）</div></div>
+        <div class="check" onclick="toggleQuest('${Q.id}')">✓</div></div>
+      <div class="stepper"><button onclick="step('${Q.id}',-1)">−</button><div class="n">${q.count}</div><button onclick="step('${Q.id}',1)">＋</button><div class="unit">${Q.unit}</div></div>
     </div>`;
   }).join('');
 
-  if(curView==='cal') renderCal();
+  if(curView==='cal')renderCal();
+  if(curView==='ach')renderAch();
+  if(curView==='shop')renderShop();
 }
 
-/* ============ Level up FX ============ */
+/* ================= FX ================= */
 let audioCtx=null;
-function beep(){
-  try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
-    const notes=[660,880,1320]; notes.forEach((f,i)=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type='square'; o.frequency.value=f; o.connect(g); g.connect(audioCtx.destination);
-      const t=audioCtx.currentTime+i*0.09; g.gain.setValueAtTime(0.0001,t);
-      g.gain.exponentialRampToValueAtTime(0.15,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.12);
-      o.start(t); o.stop(t+0.13);
-    });
-  }catch(e){}
-}
-function levelUpFx(lv){
-  const f=document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
-  const t=document.getElementById('toast');
-  t.innerHTML='⭐ LEVEL UP！ Lv.'+lv+' ⭐<small>'+classFor(lv).name+'</small>';
-  t.classList.add('show'); beep();
-  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1900);
-}
+function beep(){try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();[660,880,1320].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.value=f;o.connect(g);g.connect(audioCtx.destination);const t=audioCtx.currentTime+i*0.09;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.15,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+0.12);o.start(t);o.stop(t+0.13);});}catch(e){}}
+function flashFx(){const f=document.getElementById('flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');}
+function levelUpFx(lv){flashFx();beep();pushToast('⭐ LEVEL UP！ Lv.'+lv+' ⭐<small>'+classFor(lv).name+'</small>',2000);}
+let toastQ=[],toastBusy=false;
+function pushToast(html,ms){toastQ.push([html,ms||1800]);runToast();}
+function runToast(){if(toastBusy||!toastQ.length)return;toastBusy=true;const[html,ms]=toastQ.shift();const t=document.getElementById('toast');t.innerHTML=html;t.classList.add('show');setTimeout(()=>{t.classList.remove('show');setTimeout(()=>{toastBusy=false;runToast();},350);},ms);}
 
-/* ============ Views ============ */
+/* ================= Views ================= */
 let curView='quest';
 function showView(name){
   curView=name;
-  document.getElementById('viewQuest').classList.toggle('on',name==='quest');
-  document.getElementById('viewCal').classList.toggle('on',name==='cal');
-  document.getElementById('tabQuest').classList.toggle('on',name==='quest');
-  document.getElementById('tabCal').classList.toggle('on',name==='cal');
-  if(name==='cal') renderCal();
+  ['quest','cal','ach','shop'].forEach(v=>{
+    document.getElementById('view-'+v).classList.toggle('on',v===name);
+    document.getElementById('tab-'+v).classList.toggle('on',v===name);
+  });
+  if(name==='cal')renderCal(); if(name==='ach')renderAch(); if(name==='shop')renderShop();
 }
 
-/* ============ Calendar ============ */
-let calY, calM; // month being viewed
-(function initCal(){const n=new Date(); calY=n.getFullYear(); calM=n.getMonth();})();
-function calMove(d){ calM+=d; if(calM<0){calM=11;calY--;} if(calM>11){calM=0;calY++;} renderCal(); }
-function heatClass(done){ return done>=3?'h3':done===2?'h2':done>=1?'h1':''; }
+/* ================= Calendar ================= */
+let calY,calM;(function(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();})();
+function calMove(d){calM+=d;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}renderCal();}
+function heatClass(done){return done>=3?'h3':done===2?'h2':done>=1?'h1':'';}
 function renderCal(){
-  const today=todayStr();
-  // ensure today's live progress reflected
-  commitToHistory(S.todayDate);
+  const today=todayStr();commitToHistory(S.todayDate,computeTodayXp());
   document.getElementById('calMon').textContent=calY+'年 '+(calM+1)+'月';
-  const first=new Date(calY,calM,1).getDay();
-  const days=new Date(calY,calM+1,0).getDate();
+  const first=new Date(calY,calM,1).getDay(),days=new Date(calY,calM+1,0).getDate();
   const dow=['日','月','火','水','木','金','土'];
   let html=dow.map(d=>`<div class="dow">${d}</div>`).join('');
-  for(let i=0;i<first;i++) html+=`<div class="cell empty"></div>`;
-  let sumDays=0,sumItems=0,sumXp=0;
+  for(let i=0;i<first;i++)html+=`<div class="cell empty"></div>`;
+  let sd=0,si=0,sx=0;
   for(let d=1;d<=days;d++){
     const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const h=S.history[ds];
-    const done=h?h.done:0;
-    const items=h?(h.counts.research+h.counts.pricecheck+h.counts.restock):0;
-    if(h){sumDays++; sumItems+=items; sumXp+=h.xp;}
-    const cls=[ 'cell', heatClass(done), (ds===today?'today':''), (h?'has':'') ].filter(Boolean).join(' ');
-    const star = done>=3?'<span class="star">🔥</span>':'';
-    const onclick = h?`onclick="openDay('${ds}')"`:'';
-    html+=`<div class="${cls}" ${onclick}>${d}${star}</div>`;
+    const h=S.history[ds];const done=h?h.done:0;const items=h?(h.counts.research+h.counts.pricecheck+h.counts.restock):0;
+    if(h){sd++;si+=items;sx+=h.xp;}
+    const cls=['cell',heatClass(done),(ds===today?'today':''),(h?'has':'')].filter(Boolean).join(' ');
+    html+=`<div class="${cls}" ${h?`onclick="openDay('${ds}')"`:''}>${d}${done>=3?'<span class="star">🔥</span>':''}</div>`;
   }
   document.getElementById('calGrid').innerHTML=html;
-  document.getElementById('sumDays').textContent=sumDays;
-  document.getElementById('sumItems').textContent=sumItems;
-  document.getElementById('sumXp').textContent=sumXp;
+  document.getElementById('sumDays').textContent=sd;document.getElementById('sumItems').textContent=si;document.getElementById('sumXp').textContent=sx;
 }
-function openDay(ds){
-  const h=S.history[ds]; if(!h) return;
-  document.getElementById('popTitle').textContent=ds+' の記録';
+function openDay(ds){const h=S.history[ds];if(!h)return;document.getElementById('popTitle').textContent=ds+' の記録';
   const rows=QUESTS.map(Q=>`<div class="poprow"><span>${Q.emoji} ${Q.name}</span><b>${h.counts[Q.id]} ${Q.unit}</b></div>`).join('');
-  document.getElementById('popBody').innerHTML=
-    `<div class="poprow"><span>完了クエスト</span><b>${h.done} / 3</b></div>`+rows+
-    `<div class="poprow"><span>獲得XP</span><b style="color:var(--gold)">${h.xp} XP</b></div>`;
-  document.getElementById('pop').classList.add('on');
-}
+  document.getElementById('popBody').innerHTML=`<div class="poprow"><span>完了クエスト</span><b>${h.done} / 3</b></div>`+rows+`<div class="poprow"><span>獲得XP</span><b style="color:var(--gold)">${h.xp} XP</b></div>`;
+  document.getElementById('pop').classList.add('on');}
 function closePop(){document.getElementById('pop').classList.remove('on');}
 
-/* ============ Boot ============ */
-rollover();
-render();
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
-// re-check rollover when app returns to foreground
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ rollover(); render(); }});
+/* ================= Achievements view ================= */
+function renderAch(){
+  document.getElementById('titleChips').innerHTML=S.unlockedTitles.map(id=>`<span class="tchip ${S.title===id?'on':''}" onclick="setTitle('${id}')">«${TITLES[id]}»</span>`).join('');
+  document.getElementById('achGrid').innerHTML=ACHIEVEMENTS.map(a=>{
+    const got=!!S.achievements[a.id];
+    return `<div class="achCard ${got?'got':'locked'}"><div class="aic">${got?a.icon:'🔒'}</div><div class="an">${a.name}</div><div class="ad">${a.desc}</div></div>`;
+  }).join('');
+}
+
+/* ================= Shop view ================= */
+function renderShop(){
+  document.getElementById('shopGold').textContent=S.gold;
+  const build=cat=>SHOP[cat].map(it=>{
+    const owned=S.owned[cat].includes(it.id),eq=S.cosmetics[cat]===it.id;
+    let price = eq?'<span class="sp eq">装備中</span>':owned?'<span class="sp owned">所持 ▶ 装備</span>':`<span class="sp">🪙 ${it.price}</span>`;
+    return `<div class="shopCard ${eq?'equipped':''}" onclick="buyItem('${cat}','${it.id}')"><div class="sic">${it.emoji}</div><div class="sn">${it.name}</div>${price}</div>`;
+  }).join('');
+  document.getElementById('shopHat').innerHTML=build('hat');
+  document.getElementById('shopRobe').innerHTML=build('robe');
+  document.getElementById('shopBg').innerHTML=build('bg');
+}
+
+/* ================= Boot ================= */
+if(S.xpCommitted===undefined)S.xpCommitted=0;
+rollover(); ensureBoss(); recompute(false); render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){rollover();recompute(false);render();}});
 </script>
