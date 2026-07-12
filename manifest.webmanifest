@@ -1,0 +1,16 @@
+{
+  "name": "eBayセラークエスト",
+  "short_name": "eBayクエスト",
+  "description": "eBayセラー業務の日々の作業をRPG風にこなす達成トラッカー",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#140e26",
+  "theme_color": "#1a1230",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
