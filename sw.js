@@ -1,5 +1,5 @@
 /* eBayクエスト Service Worker — offline caching + push reminders */
-const CACHE = 'ebay-quest-v4';
+const CACHE = 'ebay-quest-v5';
 const ASSETS = [
   './',
   './index.html',

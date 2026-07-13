@@ -260,6 +260,7 @@ const QUESTS=[
   {id:'research',  emoji:'🔍', name:'新規出品リサーチ', unit:'候補', desc:'テラピークで90日2個以上売れた商品を探し、国内在庫と相場から出品候補を洗い出す。'},
   {id:'pricecheck',emoji:'💰', name:'最安値チェック',   unit:'件',   desc:'自分の出品が検索内で最安値か確認。同条件で負けていれば価格見直しを検討。'},
   {id:'restock',   emoji:'📦', name:'在庫補充',         unit:'件',   desc:'在庫切れ商品を特定し、国内在庫と利益を確認して再出品・補充する。'},
+  {id:'alertcrawl',emoji:'🚨', name:'アラートクローラー巡回', noCount:true, desc:'設定したアラート／クローラーの通知を巡回チェックし、値下げ・在庫・ライバル動向を確認する。'},
 ];
 const XP_DONE=20, XP_PER_ITEM=5, ITEM_CAP=20, PERFECT_BONUS=60;
 const CLASSES=[{min:20,name:'マスターセラー',tier:3},{min:10,name:'ベテランセラー',tier:2},{min:5,name:'熟練セラー',tier:1},{min:1,name:'見習いセラー',tier:0}];
@@ -300,12 +301,14 @@ function weekKey(d){const t=new Date(d||new Date());t.setHours(0,0,0,0);t.setDat
 function hashStr(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
 
 /* ================= State ================= */
-function freshQuests(){return {research:{done:false,count:0},pricecheck:{done:false,count:0},restock:{done:false,count:0}};}
+function freshQuests(){const o={};for(const q of QUESTS)o[q.id]={done:false,count:0};return o;}
+function freshGoals(){const o={};for(const q of QUESTS)o[q.id]=0;return o;}
+function freshGoalHit(){const o={};for(const q of QUESTS)o[q.id]=false;return o;}
 function defaultState(){return {
   xpCommitted:0, bonusXp:0, totalXp:0, level:1, xp:0, _need:xpForLevel(1),
   streak:0, bestStreak:0, lastCompletedDate:null, todayDate:todayStr(),
   quests:freshQuests(), history:{}, gold:0, todayPeakXp:0, perfectCountedToday:false,
-  goals:{research:0,pricecheck:0,restock:0}, goalHitToday:{research:false,pricecheck:false,restock:false},
+  goals:freshGoals(), goalHitToday:freshGoalHit(),
   boss:null, achievements:{}, unlockedTitles:['novice'], title:'novice',
   cosmetics:{hat:'none',robe:'default',bg:'default'},
   owned:{hat:['none'],robe:['default'],bg:['default']},
@@ -315,11 +318,12 @@ function load(){
   try{const s=JSON.parse(localStorage.getItem(KEY));
     if(s&&s.quests){const d=defaultState();
       const st=Object.assign(d,s);
-      st.stats=Object.assign(d.stats,s.stats||{});
-      st.cosmetics=Object.assign(d.cosmetics,s.cosmetics||{});
-      st.owned=Object.assign(d.owned,s.owned||{});
-      st.goals=Object.assign(d.goals,s.goals||{});
-      st.goalHitToday=Object.assign(d.goalHitToday,s.goalHitToday||{});
+      st.stats=Object.assign(defaultState().stats,s.stats||{});
+      st.cosmetics=Object.assign({hat:'none',robe:'default',bg:'default'},s.cosmetics||{});
+      st.owned=Object.assign({hat:['none'],robe:['default'],bg:['default']},s.owned||{});
+      st.quests=Object.assign(freshQuests(),s.quests||{});
+      st.goals=Object.assign(freshGoals(),s.goals||{});
+      st.goalHitToday=Object.assign(freshGoalHit(),s.goalHitToday||{});
       return st;
     }}catch(e){}
   return defaultState();
@@ -361,7 +365,7 @@ function recompute(animate){
     const g=Math.floor(todayXp/4)-Math.floor(S.todayPeakXp/4);if(g>0)earnGold(g);
     S.todayPeakXp=todayXp;
   }
-  if(allDoneToday()&&!S.perfectCountedToday){S.perfectCountedToday=true;S.stats.perfectDays++;pushToast('⭐ パーフェクトデイ！<small>3クエスト完了 ＋'+PERFECT_BONUS+'XPボーナス</small>',2200);}
+  if(allDoneToday()&&!S.perfectCountedToday){S.perfectCountedToday=true;S.stats.perfectDays++;pushToast('⭐ パーフェクトデイ！<small>全'+QUESTS.length+'クエスト完了 ＋'+PERFECT_BONUS+'XPボーナス</small>',2200);}
   for(const k in S.quests){const g=S.goals[k]||0;const hit=g>0&&S.quests[k].count>=g;
     if(hit&&!S.goalHitToday[k]){S.goalHitToday[k]=true;pushToast('🎯 目標達成！ '+questName(k)+'<small>+'+(g*XP_PER_ITEM)+'XP ボーナス</small>',1800);}
     else if(!hit&&S.goalHitToday[k]){S.goalHitToday[k]=false;}}
@@ -390,7 +394,7 @@ function rollover(){
     S.stats.totalQuests+=todayDone();
     if(S.lastCompletedDate&&S.lastCompletedDate<addDays(today,-1))S.streak=0;
     S.quests=freshQuests();
-    S.goalHitToday={research:false,pricecheck:false,restock:false};
+    S.goalHitToday=freshGoalHit();
     S.todayDate=today; S.todayPeakXp=0; S.perfectCountedToday=false;
     ensureBoss(); save();
   }
@@ -483,8 +487,8 @@ function render(){
   document.getElementById('streak').textContent=S.streak;
   document.getElementById('multChip').textContent='XP x'+streakMult().toFixed(1);
   document.getElementById('gold').textContent=S.gold;
-  const dc=todayDone();
-  document.getElementById('hearts').textContent='♥'.repeat(dc)+'♡'.repeat(3-dc);
+  const dc=todayDone(), qn=QUESTS.length;
+  document.getElementById('hearts').textContent='♥'.repeat(dc)+'♡'.repeat(Math.max(0,qn-dc));
 
   // quest view (boss banner + quests)
   const b=S.boss; const bpct=b?Math.max(0,b.hp/b.maxHp*100):0;
@@ -496,15 +500,20 @@ function render(){
     </div>`:'';
   document.getElementById('view-quest').innerHTML=bossHtml+QUESTS.map(Q=>{
     const q=S.quests[Q.id];const itemXp=Math.min(q.count,ITEM_CAP)*XP_PER_ITEM;const g=S.goals[Q.id]||0;
+    const xpLine=Q.noCount
+      ? `<div class="qxp">実施で +${XP_DONE}XP（実施したかどうかの記録）</div>`
+      : `<div class="qxp">完了 +${XP_DONE}XP ／ ${Q.unit}ごと +${XP_PER_ITEM}XP（現在 +${(q.done?XP_DONE:0)+itemXp}XP）</div>`;
+    const controls=Q.noCount ? '' :
+      `<div class="stepper"><button onclick="step('${Q.id}',-1)">−</button><div class="n">${q.count}</div><button onclick="step('${Q.id}',1)">＋</button><div class="unit">${Q.unit}</div></div>
+      <div class="goalRow"><span class="goalLbl">🎯 今日の目標</span>
+        <div class="ministep"><button onclick="setGoal('${Q.id}',-1)">−</button><span>${g}</span><button onclick="setGoal('${Q.id}',1)">＋</button></div>
+        <span class="goalNote ${g>0&&q.count>=g?'hit':''}">${g>0?(q.count>=g?'達成 ✓ +'+(g*XP_PER_ITEM)+'XP':'達成で +'+(g*XP_PER_ITEM)+'XP'):'未設定'}</span></div>`;
     return `<div class="quest ${q.done?'done':''}">
       <div class="qtop"><div class="qemoji">${Q.emoji}</div>
         <div class="qbody"><div class="qname">${Q.name}</div><div class="qdesc">${Q.desc}</div>
-          <div class="qxp">完了 +${XP_DONE}XP ／ ${Q.unit}ごと +${XP_PER_ITEM}XP（現在 +${(q.done?XP_DONE:0)+itemXp}XP）</div></div>
+          ${xpLine}</div>
         <div class="check" onclick="toggleQuest('${Q.id}')">✓</div></div>
-      <div class="stepper"><button onclick="step('${Q.id}',-1)">−</button><div class="n">${q.count}</div><button onclick="step('${Q.id}',1)">＋</button><div class="unit">${Q.unit}</div></div>
-      <div class="goalRow"><span class="goalLbl">🎯 今日の目標</span>
-        <div class="ministep"><button onclick="setGoal('${Q.id}',-1)">−</button><span>${g}</span><button onclick="setGoal('${Q.id}',1)">＋</button></div>
-        <span class="goalNote ${g>0&&q.count>=g?'hit':''}">${g>0?(q.count>=g?'達成 ✓ +'+(g*XP_PER_ITEM)+'XP':'達成で +'+(g*XP_PER_ITEM)+'XP'):'未設定'}</span></div>
+      ${controls}
     </div>`;
   }).join('');
 
@@ -550,14 +559,14 @@ function renderCal(){
     const h=S.history[ds];const done=h?h.done:0;const items=h?(h.counts.research+h.counts.pricecheck+h.counts.restock):0;
     if(h){sd++;si+=items;sx+=h.xp;}
     const cls=['cell',heatClass(done),(ds===today?'today':''),(h?'has':'')].filter(Boolean).join(' ');
-    html+=`<div class="${cls}" ${h?`onclick="openDay('${ds}')"`:''}>${d}${done>=3?'<span class="star">🔥</span>':''}</div>`;
+    html+=`<div class="${cls}" ${h?`onclick="openDay('${ds}')"`:''}>${d}${done>=QUESTS.length?'<span class="star">🔥</span>':''}</div>`;
   }
   document.getElementById('calGrid').innerHTML=html;
   document.getElementById('sumDays').textContent=sd;document.getElementById('sumItems').textContent=si;document.getElementById('sumXp').textContent=sx;
 }
 function openDay(ds){const h=S.history[ds];if(!h)return;document.getElementById('popTitle').textContent=ds+' の記録';
   const rows=QUESTS.map(Q=>`<div class="poprow"><span>${Q.emoji} ${Q.name}</span><b>${h.counts[Q.id]} ${Q.unit}</b></div>`).join('');
-  document.getElementById('popBody').innerHTML=`<div class="poprow"><span>完了クエスト</span><b>${h.done} / 3</b></div>`+rows+`<div class="poprow"><span>獲得XP</span><b style="color:var(--gold)">${h.xp} XP</b></div>`;
+  document.getElementById('popBody').innerHTML=`<div class="poprow"><span>完了クエスト</span><b>${h.done} / ${QUESTS.length}</b></div>`+rows+`<div class="poprow"><span>獲得XP</span><b style="color:var(--gold)">${h.xp} XP</b></div>`;
   document.getElementById('pop').classList.add('on');}
 function closePop(){document.getElementById('pop').classList.remove('on');}
 
