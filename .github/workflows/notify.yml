@@ -1,0 +1,26 @@
+name: Daily reminder push
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 11:00 UTC = 20:00 JST (毎日)
+  workflow_dispatch: {}     # 手動テスト送信用
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install deps
+        working-directory: notify
+        run: npm install --omit=dev --no-audit --no-fund
+      - name: Send reminders
+        working-directory: notify
+        run: node send.js
+        env:
+          VAPID_PUBLIC: ${{ secrets.VAPID_PUBLIC }}
+          VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
+          VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+          PUSH_SUBSCRIPTIONS: ${{ secrets.PUSH_SUBSCRIPTIONS }}

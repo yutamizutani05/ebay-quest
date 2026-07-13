@@ -1,2 +1,4 @@
 .DS_Store
 *.log
+notify/node_modules
+notify/vapid.json

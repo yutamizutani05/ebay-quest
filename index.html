@@ -157,6 +157,14 @@
   @keyframes fl{0%{opacity:0}20%{opacity:.55}100%{opacity:0}}
   .footer{text-align:center; font-size:10px; color:var(--muted); margin-top:20px; line-height:1.7}
   .view{display:none} .view.on{display:block}
+  .notifCard{background:var(--panel); border:2px solid var(--line); border-radius:12px; padding:12px; margin-top:12px; box-shadow:var(--shadow)}
+  .notifTop{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .notifTop span{font-size:12px; color:var(--gold)}
+  .notifBtn{padding:8px 14px; border-radius:9px; border:0; background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700; font-family:inherit; font-size:12px; cursor:pointer}
+  .notifBtn.on{background:#1c2b3a; color:var(--green); border:1px solid var(--green)}
+  .notifMsg{font-size:10px; color:var(--muted); margin-top:8px; line-height:1.6}
+  .subBox{width:100%; height:70px; margin-top:8px; font-size:9px; font-family:inherit; background:#160f30; color:var(--muted); border:1px solid var(--line); border-radius:8px; padding:6px; resize:none}
+  .copyBtn{margin-top:8px; width:100%; padding:9px; border-radius:9px; border:0; background:var(--xp2); color:#fff; font-weight:700; font-family:inherit; font-size:12px; cursor:pointer}
 </style>
 
 <div class="wrap">
@@ -227,6 +235,13 @@
     <div class="secTitle">🖼️ せなかの背景</div>
     <div class="shopGrid" id="shopBg"></div>
     <div class="footer">作業でゴールドを稼いで、自分だけのヒーローに！</div>
+  </div>
+
+  <div class="notifCard">
+    <div class="notifTop"><span>🔔 20時のリマインダー通知</span><button class="notifBtn" id="notifBtn" onclick="enableNotify()">通知をオン</button></div>
+    <div class="notifMsg" id="notifMsg">記録が無い日だけ、毎日20時にそっとお知らせします。<br>※iPhoneで「ホーム画面に追加」したアプリから開いて有効化してください。</div>
+    <textarea class="subBox" id="subBox" readonly style="display:none"></textarea>
+    <button class="copyBtn" id="copyBtn" style="display:none" onclick="copySub()">📋 購読情報をコピー</button>
   </div>
 
   <div class="footer">データはこの端末内だけに保存されます。<br>ホーム画面に追加してアプリのように使えます。</div>
@@ -309,7 +324,7 @@ function load(){
     }}catch(e){}
   return defaultState();
 }
-function save(){localStorage.setItem(KEY,JSON.stringify(S));}
+function save(){localStorage.setItem(KEY,JSON.stringify(S));if(typeof mirrorRecorded==='function')mirrorRecorded();}
 let S=load();
 
 /* ================= XP / level ================= */
@@ -568,9 +583,49 @@ function renderShop(){
   document.getElementById('shopBg').innerHTML=build('bg');
 }
 
+/* ================= Notifications (Web Push) ================= */
+const VAPID_PUBLIC='BJq3rxTXMjYMDOJUH9CXklrmKF_B9uSpdK2QsFokrNA1OU7CiLGMRE3G1IwoIl8BPpTIJOjjAZyQoVk5O9pbtNw';
+function urlB64ToUint8(b64){const pad='='.repeat((4-b64.length%4)%4);const s=(b64+pad).replace(/-/g,'+').replace(/_/g,'/');const raw=atob(s);const arr=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);return arr;}
+// mirror "did I record today?" into IndexedDB so the service worker can read it on push
+function idbPut(key,val){return new Promise((res,rej)=>{const r=indexedDB.open('ebayQuest',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('kv'))r.result.createObjectStore('kv');};r.onsuccess=()=>{try{const db=r.result;const t=db.transaction('kv','readwrite');t.objectStore('kv').put(val,key);t.oncomplete=()=>res();t.onerror=()=>rej();}catch(e){rej();}};r.onerror=()=>rej();});}
+function mirrorRecorded(){const t=todayStr();idbPut('lastRecordDate',S.history[t]?t:'').catch(()=>{});}
+async function refreshNotifUI(){
+  const btn=document.getElementById('notifBtn');
+  try{
+    if(!('serviceWorker'in navigator)||!('PushManager'in window)){btn.textContent='未対応';btn.disabled=true;return;}
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.getSubscription();
+    if(sub&&Notification.permission==='granted'){btn.textContent='✅ オン';btn.classList.add('on');
+      document.getElementById('notifMsg').innerHTML='通知はオンです。記録が無い日は20時にお知らせします。<br>（設定に必要な場合は下の購読情報をコピーして共有してください）';
+      showSub(sub);
+    } else {btn.textContent='通知をオン';btn.classList.remove('on');}
+  }catch(e){}
+}
+function showSub(sub){const box=document.getElementById('subBox');box.style.display='block';box.value=JSON.stringify(sub);document.getElementById('copyBtn').style.display='block';}
+async function enableNotify(){
+  const msg=document.getElementById('notifMsg');
+  try{
+    if(!('serviceWorker'in navigator)||!('PushManager'in window)||!('Notification'in window)){
+      msg.innerHTML='⚠️ この開き方では通知を使えません。<b>iPhoneのSafariでこのページを開き「ホーム画面に追加」→ 追加したアプリから開いて</b>もう一度お試しください。';return;}
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted'){msg.innerHTML='通知が許可されませんでした。iPhoneの「設定 > 通知」から後で許可できます。';return;}
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8(VAPID_PUBLIC)});
+    await mirrorRecorded();
+    document.getElementById('notifBtn').textContent='✅ オン';document.getElementById('notifBtn').classList.add('on');
+    msg.innerHTML='✅ 通知をオンにしました！<br><b>下のボタンで購読情報をコピーして、チャットに貼り付けてください</b>（毎日20時の送信設定に使います）。';
+    showSub(sub);
+  }catch(e){msg.innerHTML='⚠️ 通知の有効化に失敗しました（'+(e&&e.message||e)+'）。ホーム画面に追加したアプリから開いて再度お試しください。';}
+}
+function copySub(){const box=document.getElementById('subBox');box.select();const txt=box.value;
+  const done=()=>{const b=document.getElementById('copyBtn');b.textContent='✅ コピーしました！';setTimeout(()=>b.textContent='📋 購読情報をコピー',1800);};
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done).catch(()=>{try{document.execCommand('copy');done();}catch(_){}});}
+  else{try{document.execCommand('copy');done();}catch(_){}}}
+
 /* ================= Boot ================= */
 if(S.xpCommitted===undefined)S.xpCommitted=0;
-rollover(); ensureBoss(); recompute(false); render();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){rollover();recompute(false);render();}});
+rollover(); ensureBoss(); recompute(false); render(); mirrorRecorded();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').then(()=>refreshNotifUI()).catch(()=>{});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){rollover();recompute(false);render();mirrorRecorded();}});
 </script>
