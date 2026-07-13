@@ -89,6 +89,13 @@
   .stepper button{width:38px; height:34px; border:0; background:transparent; color:var(--gold); font-size:20px; cursor:pointer; font-family:inherit}
   .stepper .n{min-width:52px; text-align:center; font-size:14px}
   .stepper .unit{font-size:10px; color:var(--muted); padding:0 10px 0 2px}
+  .goalRow{display:flex; align-items:center; gap:8px; margin-top:10px; flex-wrap:wrap}
+  .goalLbl{font-size:11px; color:var(--gold)}
+  .ministep{display:flex; align-items:center; background:#160f30; border:1px solid var(--line); border-radius:8px}
+  .ministep button{width:30px; height:28px; border:0; background:transparent; color:var(--gold); font-size:16px; cursor:pointer; font-family:inherit}
+  .ministep span{min-width:26px; text-align:center; font-size:13px}
+  .goalNote{font-size:10px; color:var(--muted)}
+  .goalNote.hit{color:var(--green); font-weight:700}
 
   /* ---- Calendar ---- */
   .calhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
@@ -283,6 +290,7 @@ function defaultState(){return {
   xpCommitted:0, bonusXp:0, totalXp:0, level:1, xp:0, _need:xpForLevel(1),
   streak:0, bestStreak:0, lastCompletedDate:null, todayDate:todayStr(),
   quests:freshQuests(), history:{}, gold:0, todayPeakXp:0, perfectCountedToday:false,
+  goals:{research:0,pricecheck:0,restock:0}, goalHitToday:{research:false,pricecheck:false,restock:false},
   boss:null, achievements:{}, unlockedTitles:['novice'], title:'novice',
   cosmetics:{hat:'none',robe:'default',bg:'default'},
   owned:{hat:['none'],robe:['default'],bg:['default']},
@@ -295,6 +303,8 @@ function load(){
       st.stats=Object.assign(d.stats,s.stats||{});
       st.cosmetics=Object.assign(d.cosmetics,s.cosmetics||{});
       st.owned=Object.assign(d.owned,s.owned||{});
+      st.goals=Object.assign(d.goals,s.goals||{});
+      st.goalHitToday=Object.assign(d.goalHitToday,s.goalHitToday||{});
       return st;
     }}catch(e){}
   return defaultState();
@@ -308,7 +318,8 @@ function deriveLevel(total){let L=1,rem=total;while(rem>=xpForLevel(L)){rem-=xpF
 function computeTodayBaseXp(){let b=0;for(const k in S.quests){if(S.quests[k].done)b+=XP_DONE;b+=Math.min(S.quests[k].count,ITEM_CAP)*XP_PER_ITEM;}return b;}
 function allDoneToday(){return Object.values(S.quests).every(q=>q.done);}
 function streakMult(){return 1+Math.min(S.streak,10)*0.05;}
-function computeTodayXp(){let xp=Math.round(computeTodayBaseXp()*streakMult());if(allDoneToday())xp+=PERFECT_BONUS;return xp;}
+function goalBonusTotal(){let b=0;for(const k in S.quests){const g=S.goals[k]||0;if(g>0&&S.quests[k].count>=g)b+=g*XP_PER_ITEM;}return b;}
+function computeTodayXp(){let xp=Math.round(computeTodayBaseXp()*streakMult());if(allDoneToday())xp+=PERFECT_BONUS;xp+=goalBonusTotal();return xp;}
 function classFor(lv){for(const c of CLASSES){if(lv>=c.min)return c;}return CLASSES[CLASSES.length-1];}
 
 /* ================= Cumulative (committed + today) ================= */
@@ -336,6 +347,9 @@ function recompute(animate){
     S.todayPeakXp=todayXp;
   }
   if(allDoneToday()&&!S.perfectCountedToday){S.perfectCountedToday=true;S.stats.perfectDays++;pushToast('⭐ パーフェクトデイ！<small>3クエスト完了 ＋'+PERFECT_BONUS+'XPボーナス</small>',2200);}
+  for(const k in S.quests){const g=S.goals[k]||0;const hit=g>0&&S.quests[k].count>=g;
+    if(hit&&!S.goalHitToday[k]){S.goalHitToday[k]=true;pushToast('🎯 目標達成！ '+questName(k)+'<small>+'+(g*XP_PER_ITEM)+'XP ボーナス</small>',1800);}
+    else if(!hit&&S.goalHitToday[k]){S.goalHitToday[k]=false;}}
   checkAchievements();
   S.totalXp=S.xpCommitted+S.bonusXp+todayXp;
   const info=deriveLevel(S.totalXp);S.level=info.level;S.xp=info.xp;S._need=info.need;
@@ -361,6 +375,7 @@ function rollover(){
     S.stats.totalQuests+=todayDone();
     if(S.lastCompletedDate&&S.lastCompletedDate<addDays(today,-1))S.streak=0;
     S.quests=freshQuests();
+    S.goalHitToday={research:false,pricecheck:false,restock:false};
     S.todayDate=today; S.todayPeakXp=0; S.perfectCountedToday=false;
     ensureBoss(); save();
   }
@@ -393,6 +408,8 @@ function toggleQuest(id){
   recompute(true); save(); render();
 }
 function step(id,delta){rollover();const q=S.quests[id];q.count=Math.max(0,q.count+delta);recompute(true);save();render();}
+function setGoal(id,delta){rollover();S.goals[id]=Math.max(0,(S.goals[id]||0)+delta);recompute(true);save();render();}
+function questName(id){const q=QUESTS.find(x=>x.id===id);return q?q.name:id;}
 function buyItem(cat,id){
   const item=SHOP[cat].find(x=>x.id===id);if(!item)return;
   if(S.owned[cat].includes(id)){S.cosmetics[cat]=id;save();render();return;}
@@ -463,13 +480,16 @@ function render(){
       <div class="bossHint">${b.defeated?'来週、新たなボスが現れる…':'クエスト完了や作業件数がボスへの攻撃になる！週内に討伐で報酬 🪙120 ＋80XP'}</div>
     </div>`:'';
   document.getElementById('view-quest').innerHTML=bossHtml+QUESTS.map(Q=>{
-    const q=S.quests[Q.id];const itemXp=Math.min(q.count,ITEM_CAP)*XP_PER_ITEM;
+    const q=S.quests[Q.id];const itemXp=Math.min(q.count,ITEM_CAP)*XP_PER_ITEM;const g=S.goals[Q.id]||0;
     return `<div class="quest ${q.done?'done':''}">
       <div class="qtop"><div class="qemoji">${Q.emoji}</div>
         <div class="qbody"><div class="qname">${Q.name}</div><div class="qdesc">${Q.desc}</div>
           <div class="qxp">完了 +${XP_DONE}XP ／ ${Q.unit}ごと +${XP_PER_ITEM}XP（現在 +${(q.done?XP_DONE:0)+itemXp}XP）</div></div>
         <div class="check" onclick="toggleQuest('${Q.id}')">✓</div></div>
       <div class="stepper"><button onclick="step('${Q.id}',-1)">−</button><div class="n">${q.count}</div><button onclick="step('${Q.id}',1)">＋</button><div class="unit">${Q.unit}</div></div>
+      <div class="goalRow"><span class="goalLbl">🎯 今日の目標</span>
+        <div class="ministep"><button onclick="setGoal('${Q.id}',-1)">−</button><span>${g}</span><button onclick="setGoal('${Q.id}',1)">＋</button></div>
+        <span class="goalNote ${g>0&&q.count>=g?'hit':''}">${g>0?(q.count>=g?'達成 ✓ +'+(g*XP_PER_ITEM)+'XP':'達成で +'+(g*XP_PER_ITEM)+'XP'):'未設定'}</span></div>
     </div>`;
   }).join('');
 
