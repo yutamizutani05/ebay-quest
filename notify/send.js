@@ -18,8 +18,8 @@ try {
 if (!subs.length) { console.log('No subscriptions configured — nothing to send.'); process.exit(0); }
 
 const payload = JSON.stringify({
-  title: 'eBayクエスト',
-  body: '今日のクエストがまだです！ボスが待ってるよ ⚔️',
+  title: 'ユウタクエスト',
+  body: '今日のクエストがまだです！勉強と出品でボスを倒そう ⚔️',
   url: './index.html'
 });
 

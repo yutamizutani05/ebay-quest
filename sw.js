@@ -1,5 +1,5 @@
-/* eBayクエスト Service Worker — offline caching + push reminders */
-const CACHE = 'ebay-quest-v5';
+/* ユウタクエスト Service Worker — offline caching + push reminders */
+const CACHE = 'ebay-quest-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -50,7 +50,7 @@ self.addEventListener('push', e => {
     const rec = await idbGet('lastRecordDate');
     // Conditional: if today already has a record, don't nag.
     if (rec === swToday()) return;
-    await self.registration.showNotification(data.title || 'eBayクエスト', {
+    await self.registration.showNotification(data.title || 'ユウタクエスト', {
       body: data.body || '今日のクエストがまだです！ボスが待ってるよ ⚔️',
       icon: 'icon-192.png',
       badge: 'icon-192.png',

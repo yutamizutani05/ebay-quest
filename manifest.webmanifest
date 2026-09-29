@@ -1,7 +1,7 @@
 {
-  "name": "eBayセラークエスト",
-  "short_name": "eBayクエスト",
-  "description": "eBayセラー業務の日々の作業をRPG風にこなす達成トラッカー",
+  "name": "ユウタクエスト",
+  "short_name": "ユウタクエスト",
+  "description": "勉強時間と出品数の日々の達成をRPG風にこなすトラッカー",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
