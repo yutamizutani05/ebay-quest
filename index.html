@@ -72,6 +72,23 @@
   .peek.done{background:linear-gradient(180deg,#2c3a1b,#202a13); border-color:#5a7a2a}
   .peek.done b{color:var(--green)}
 
+  /* ---- Quest-screen boss card ---- */
+  .peekC{background:linear-gradient(180deg,#2e2260,#241a4d); border:2px solid var(--line); border-radius:13px; padding:12px; margin-bottom:10px; box-shadow:var(--shadow)}
+  .peekC.done{background:linear-gradient(180deg,#2c3a1b,#202a13); border-color:#5a7a2a}
+  .peekC .pcTag{font-size:10px; color:var(--gold); font-weight:700; margin-bottom:8px}
+  .peekC .pcMain{display:flex; gap:11px; align-items:center}
+  .peekC .pcArt{width:52px; height:52px; flex:0 0 auto; border-radius:11px; display:grid; place-items:center; font-size:30px;
+    background:radial-gradient(circle at 50% 40%,#3a2d78,#160f30); border:1px solid var(--line)}
+  .peekC .pcArt .bimg{width:46px; height:46px; object-fit:contain}
+  .peekC .pcInfo{flex:1; min-width:0}
+  .peekC .pcName{font-size:15px; font-weight:700}
+  .peekC .pcHpRow{display:flex; align-items:center; gap:7px; margin-top:6px; font-size:10px; color:var(--muted)}
+  .peekC .pcHpRow .bar{flex:1; height:9px; margin:0}
+  .peekC .pcHpRow .nhp > i{background:linear-gradient(180deg,var(--hp),var(--hp2))}
+  .peekC .pcRew{font-size:10px; color:var(--gold); margin-top:6px}
+  .peekC .pcRew b{color:var(--ink)}
+  .peekC .pcBtn{margin-top:10px; width:100%; padding:10px; border-radius:10px; border:0; background:linear-gradient(180deg,var(--xp),var(--xp2)); color:#fff; font-weight:700; font-family:inherit; font-size:12px; cursor:pointer}
+
   /* ---- Adventure map ---- */
   .mapToggle{display:flex; gap:8px; margin-bottom:12px}
   .mtab{flex:1; text-align:center; padding:9px 4px; border-radius:10px; font-size:12px; cursor:pointer;
@@ -81,8 +98,9 @@
   .goalRow2 b{color:var(--gold); font-size:15px}
   .bar.jbar{height:18px; margin-bottom:6px}
   .bar.jbar > i{background:linear-gradient(180deg,var(--green),#3fbf80)}
-  .track{position:relative; margin-top:10px; padding-left:34px}
-  .track:before{content:''; position:absolute; left:15px; top:10px; bottom:10px; width:4px; background:var(--line); border-radius:2px}
+  .track{position:relative; margin-top:10px; padding:16px 12px 16px 46px; border-radius:14px; border:2px solid var(--line);
+    background:linear-gradient(180deg,#1e2a5c 0%,#24345e 35%,#1f3a3e 70%,#1e3a2a 100%)}
+  .track:before{content:''; position:absolute; left:27px; top:18px; bottom:18px; width:4px; background:rgba(255,255,255,.18); border-radius:2px}
   .node{position:relative; display:flex; gap:10px; align-items:flex-start; margin-bottom:14px}
   .node .dot{position:absolute; left:-34px; width:34px; height:34px; border-radius:50%; display:grid; place-items:center;
     font-size:17px; background:#160f30; border:2px solid var(--line); z-index:1}
@@ -94,11 +112,45 @@
   .node.cleared .ninfo{opacity:.65}
   .node.locked .ninfo{opacity:.5}
   .node .nname{font-size:14px; font-weight:700}
-  .node .ncp{font-size:10px; color:var(--muted); margin-top:3px}
-  .node .nhp{height:12px; margin-top:8px}
+  .node .bemoji{font-size:19px; line-height:1}
+  .node .dot .bimg{width:30px; height:30px; object-fit:contain}
+  .node .nrow{display:flex; align-items:center; gap:7px}
+  .node .nbadge{width:19px; height:19px; flex:0 0 auto; border-radius:50%; background:var(--gold); color:#241a4d; font-size:11px; font-weight:700; display:grid; place-items:center}
+  .node .nstat{margin-left:auto; font-size:14px; color:var(--muted)}
+  .node .nstat.ok{color:var(--green)} .node .nstat.cur{color:var(--gold); font-weight:700}
+  .node .nhpRow{display:flex; align-items:center; gap:7px; margin-top:7px}
+  .node .nhplab{font-size:9px; color:var(--muted); min-width:68px}
+  .node .nhp{height:10px; flex:1; margin:0}
   .node .nhp > i{background:linear-gradient(180deg,var(--hp),var(--hp2))}
-  .node .remain{font-size:11px; color:var(--gold); margin-top:6px; font-weight:700}
-  .node.start .ninfo,.node.goal .ninfo{text-align:center}
+  .node .nhp.cl > i{background:linear-gradient(180deg,var(--green),#3fbf80)}
+  .node .nrew{font-size:10px; color:var(--gold); margin-top:7px}
+  .node .grand{font-size:10px; color:var(--gold); margin-top:6px; line-height:1.5}
+  .node .ninfo.center{text-align:center}
+  .node.start .dot,.node.goal .dot{font-size:18px}
+  .node.goal .dot{border-color:var(--gold)}
+
+  /* ---- Boss detail page ---- */
+  .bossPop .bdCard{background:linear-gradient(180deg,#2a2150,#1a1330); border:2px solid var(--line); border-radius:16px;
+    padding:16px; max-width:360px; width:100%; box-shadow:0 12px 36px rgba(0,0,0,.6)}
+  .bdClose{background:transparent; border:0; color:var(--ink); font-size:14px; font-family:inherit; cursor:pointer; padding:2px 0 10px}
+  .bdArt{height:150px; border-radius:12px; display:grid; place-items:center; margin-bottom:12px;
+    background:radial-gradient(circle at 50% 40%,#3a2d78,#160f30); border:1px solid var(--line)}
+  .bdArt .bdEmoji{font-size:84px; line-height:1} .bdArt .bimg{max-height:140px; max-width:80%; object-fit:contain}
+  .bdName{font-size:17px; font-weight:700; color:var(--gold)}
+  .bdDesc{font-size:12px; color:var(--muted); margin-top:7px; line-height:1.6}
+  .bdHpRow{display:flex; align-items:center; gap:8px; margin-top:12px; font-size:11px}
+  .bdHpRow .bar{flex:1; height:12px; margin:0} .bdHpRow .bar>i{background:linear-gradient(180deg,var(--hp),var(--hp2))}
+  .bdRew{margin-top:10px; font-size:12px; color:var(--gold); background:#160f30; border:1px solid var(--line); border-radius:9px; padding:9px 11px}
+  .bdStatus{margin-top:10px; font-size:12px; color:var(--ink)} .bdStatus.ok{color:var(--green); font-weight:700} .bdStatus.lock{color:var(--muted)}
+  .bdBtn{margin-top:14px; width:100%; padding:12px; border-radius:11px; border:0; background:linear-gradient(180deg,var(--xp),var(--xp2)); color:#fff; font-weight:700; font-family:inherit; font-size:13px; cursor:pointer}
+
+  /* ---- Quest-screen summary cards ---- */
+  .qsum{display:flex; gap:8px; margin-bottom:12px}
+  .qsum .box{flex:1; background:var(--panel); border:2px solid var(--line); border-radius:11px; padding:10px 12px; box-shadow:var(--shadow)}
+  .qsum .box .t{font-size:10px; color:var(--muted)}
+  .qsum .box .v{font-size:13px; font-weight:700; margin-top:5px}
+  .qsum .box .v b{color:var(--gold)}
+  .qsum .box .bar{height:8px; margin-top:7px}
 
   /* ---- Quests ---- */
   .quest{background:var(--panel); border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; box-shadow:var(--shadow); position:relative; transition:.2s}
@@ -298,6 +350,9 @@
 <div class="pop" id="pop" onclick="if(event.target===this)closePop()">
   <div class="popcard"><h3 id="popTitle"></h3><div id="popBody"></div><button onclick="closePop()">とじる</button></div>
 </div>
+<div class="pop bossPop" id="bossDetail" onclick="if(event.target===this)closeBoss()">
+  <div class="bdCard"><button class="bdClose" onclick="closeBoss()">‹ 戻る</button><div id="bdBody"></div></div>
+</div>
 <div id="toast"></div>
 <div id="flash"></div>
 
@@ -351,7 +406,7 @@ function freshQuests(){const o={};for(const q of QUESTS)o[q.id]={done:false,coun
 function freshGoals(){const o={};for(const q of QUESTS)o[q.id]=0;return o;}
 function freshGoalHit(){const o={};for(const q of QUESTS)o[q.id]=false;return o;}
 const DEFAULT_GOAL={study:200,listing:100}; // study: コマ(200=100時間) / listing: 品
-function freshJourney(){const o={};for(const q of QUESTS)o[q.id]={goal:DEFAULT_GOAL[q.id]||100,awarded:0};return o;}
+function freshJourney(){const o={};for(const q of QUESTS)o[q.id]={goal:DEFAULT_GOAL[q.id]||100,awarded:0,grandAwarded:false};return o;}
 function defaultState(){return {
   xpCommitted:0, bonusXp:0, totalXp:0, level:1, xp:0, _need:xpForLevel(1),
   streak:0, bestStreak:0, lastCompletedDate:null, todayDate:todayStr(),
@@ -374,7 +429,7 @@ function load(){
       for(const q of QUESTS){ if(s.quests&&s.quests[q.id])fq[q.id]=s.quests[q.id];
         if(s.goals&&s.goals[q.id]!=null)fg[q.id]=s.goals[q.id];
         if(s.goalHitToday&&s.goalHitToday[q.id]!=null)fh[q.id]=s.goalHitToday[q.id];
-        if(s.journey&&s.journey[q.id]){fj[q.id]={goal:s.journey[q.id].goal||fj[q.id].goal,awarded:s.journey[q.id].awarded||0};} }
+        if(s.journey&&s.journey[q.id]){fj[q.id]={goal:s.journey[q.id].goal||fj[q.id].goal,awarded:s.journey[q.id].awarded||0,grandAwarded:!!s.journey[q.id].grandAwarded};} }
       st.quests=fq; st.goals=fg; st.goalHitToday=fh; st.journey=fj;
       return st;
     }}catch(e){}
@@ -400,25 +455,46 @@ function cumItems(){return S.stats.totalItems+todayItems();}
 function cumQuests(){return S.stats.totalQuests+todayDone();}
 // 累計勉強時間（履歴は today を含めて記録されるので history の合計でOK）
 function totalStudyKoma(){return S.quests.study?questProgress('study'):0;}
+function monthTotals(){const now=new Date();const y=now.getFullYear(),m=now.getMonth();let study=0,listing=0;for(const dte in S.history){const p=dte.split('-').map(Number);if(p[0]===y&&p[1]===m+1){const c=S.history[dte].counts||{};study+=c.study||0;listing+=c.listing||0;}}return{study,listing};}
 function fmtStudy(koma){const min=koma*30;const h=Math.floor(min/60),m=min%60;if(h>0)return m>0?h+'時間'+m+'分':h+'時間';return min+'分';}
 
 /* ================= Journey (goal map + bosses) ================= */
 const NBOSS=5;
+// 各ボス: emoji(/img任意), name, hp(表示用), xp/gold(討伐報酬), desc(フレーバー)
 const BOSS_SETS={
-  study:[{emoji:'😴',name:'睡魔'},{emoji:'📱',name:'誘惑のスマホ'},{emoji:'🥱',name:'中だるみ魔'},{emoji:'🗿',name:'過去問ゴーレム'},{emoji:'👹',name:'試験の番人'}],
-  listing:[{emoji:'📷',name:'撮影めんどい魔'},{emoji:'🐉',name:'説明文ドラゴン'},{emoji:'🧭',name:'価格設定の迷宮'},{emoji:'📦',name:'梱包ゴーレム'},{emoji:'👑',name:'無在庫の覇王'}]
+  study:[
+    {emoji:'😴',name:'睡魔',hp:100,xp:50,gold:100,desc:'やる気を奪う、最強の眠気モンスター。「ちょっと横になるだけ…」の魔のささやき。'},
+    {emoji:'📱',name:'誘惑のスマホ',hp:100,xp:80,gold:150,desc:'通知の光で集中を崩す。気づけば30分が溶けている。'},
+    {emoji:'🥱',name:'中だるみ魔',hp:100,xp:120,gold:200,desc:'ソファに引きずり込む怠惰の化身。'},
+    {emoji:'🗿',name:'過去問ゴーレム',hp:100,xp:200,gold:300,desc:'難問を積み上げて心を折りにくる、岩の巨人。'},
+    {emoji:'👹',name:'試験の番人',hp:150,xp:300,gold:500,desc:'ゴールを守るラスボス。これを倒せば試験合格だ！'}
+  ],
+  listing:[
+    {emoji:'📷',name:'撮影めんどい魔',hp:100,xp:50,gold:100,desc:'「写真あとでいいや」と出品を先送りさせる魔物。'},
+    {emoji:'🐉',name:'説明文ドラゴン',hp:100,xp:80,gold:150,desc:'長い商品説明で心をくじく竜。'},
+    {emoji:'🧭',name:'価格設定の迷宮',hp:100,xp:120,gold:200,desc:'いくらにすべきか迷わせ、時間を奪う迷宮。'},
+    {emoji:'📦',name:'梱包ゴーレム',hp:100,xp:200,gold:300,desc:'発送作業の山で出品を止めにくる巨人。'},
+    {emoji:'👑',name:'無在庫の覇王',hp:150,xp:300,gold:500,desc:'出品を支配するラスボス。倒せば売上の王に！'}
+  ]
 };
+const GRAND_REWARD={xp:1000,gold:2000}; // 全ボス討伐の大報酬
+// ボスの絵（画像があれば差し替え。無ければ絵文字）
+function bossArt(boss,cls){return boss&&boss.img?`<img src="${boss.img}" class="${cls} bimg" alt="">`:`<span class="${cls}">${boss?boss.emoji:'❓'}</span>`;}
 // 累計進捗（today は履歴に二重計上しないよう live を別に足す）
 function questProgress(id){let t=S.quests[id]?S.quests[id].count:0;for(const d in S.history){if(d===S.todayDate)continue;const c=S.history[d].counts;if(c&&c[id])t+=c[id];}return t;}
 function journeyData(id){const j=S.journey[id]||{goal:NBOSS,awarded:0};const goal=Math.max(NBOSS,j.goal||NBOSS);const seg=goal/NBOSS;const prog=questProgress(id);const reached=Math.min(NBOSS,Math.floor(prog/seg));const cleared=Math.max(j.awarded||0,reached);return{goal,seg,prog,reached,cleared};}
+// ボスの表示HP（セグメント進捗を hp スケールに変換）
+function bossHp(id,i,d){const set=BOSS_SETS[id][i];const max=set.hp;if(i<d.cleared)return{cur:0,max};if(i>d.cleared)return{cur:max,max};const frac=Math.max(0,Math.min(1,(d.prog-d.seg*i)/d.seg));return{cur:Math.max(0,Math.ceil(max*(1-frac))),max};}
 function awardJourney(animate){
   for(const q of QUESTS){const id=q.id;if(!S.journey[id])continue;const d=journeyData(id);const aw=S.journey[id].awarded||0;
     if(d.reached>aw){
-      for(let i=aw;i<d.reached;i++){const xp=40*(i+1),gold=15*(i+1);S.bonusXp+=xp;earnGold(gold);S.stats.bossesDefeated++;
-        const nm=(BOSS_SETS[id]&&BOSS_SETS[id][i])?BOSS_SETS[id][i].name:'ボス';const fin=(i===NBOSS-1);
-        pushToast((fin?'🏆 ':'⚔️ ')+nm+'を討伐！'+(fin?'（'+questName(id)+'の目標達成！）':'')+'<small>+'+xp+'XP ＋🪙'+gold+'</small>',2200);}
+      for(let i=aw;i<d.reached;i++){const b=BOSS_SETS[id][i];const xp=b.xp,gold=b.gold;S.bonusXp+=xp;earnGold(gold);S.stats.bossesDefeated++;const fin=(i===NBOSS-1);
+        pushToast((fin?'🏆 ':'⚔️ ')+b.name+'を討伐！'+(fin?'（'+questName(id)+'の目標達成！）':'')+'<small>+'+xp+'EXP ＋🪙'+gold+'</small>',2200);}
       S.journey[id].awarded=d.reached;if(animate)flashFx();
     }
+    // 全ボス討伐の大報酬（1回）
+    if(d.cleared>=NBOSS && !S.journey[id].grandAwarded){S.journey[id].grandAwarded=true;S.bonusXp+=GRAND_REWARD.xp;earnGold(GRAND_REWARD.gold);if(animate)flashFx();
+      pushToast('🎉🏆 '+questName(id)+' 全ボス討伐！<small>大報酬 +'+GRAND_REWARD.xp+'EXP ＋🪙'+GRAND_REWARD.gold+'</small>',2600);}
   }
 }
 
@@ -560,12 +636,22 @@ function render(){
   const dc=todayDone(), qn=QUESTS.length;
   document.getElementById('hearts').textContent='♥'.repeat(dc)+'♡'.repeat(Math.max(0,qn-dc));
 
-  // quest view: a peek at each journey's current boss, then the quests
-  const mapPeek=QUESTS.filter(Q=>S.journey[Q.id]).map(Q=>{const d=journeyData(Q.id);const fmt=v=>Q.id==='study'?fmtStudy(Math.round(v)):Math.round(v)+'品';
-    if(d.cleared>=NBOSS)return `<div class="peek done" onclick="showView('map');selJourney('${Q.id}')"><span>${Q.emoji} ${Q.name}の冒険</span><b>🏆 ゴール達成！</b></div>`;
-    const boss=BOSS_SETS[Q.id][d.cleared];const remain=Math.max(0,Math.ceil(d.seg*(d.cleared+1)-d.prog));
-    return `<div class="peek" onclick="showView('map');selJourney('${Q.id}')"><span>${boss.emoji} ${boss.name}</span><b>あと ${fmt(remain)}で討伐 ▶</b></div>`;}).join('');
-  document.getElementById('view-quest').innerHTML=mapPeek+QUESTS.map(Q=>{
+  // quest view: current-boss cards + summary + quests
+  const mapPeek=QUESTS.filter(Q=>S.journey[Q.id]).map(Q=>{const id=Q.id;const d=journeyData(id);const fmt=v=>id==='study'?fmtStudy(Math.round(v)):Math.round(v)+'品';
+    if(d.cleared>=NBOSS)return `<div class="peekC done"><div class="pcTag">${Q.emoji} ${Q.name}の冒険</div><div class="pcMain"><div class="pcArt">🏆</div><div class="pcInfo"><div class="pcName">全ボス討伐！</div><div class="pcRew">ゴール達成 🎉</div></div></div><button class="pcBtn" onclick="showView('map');selJourney('${id}')">▶ 冒険マップへ</button></div>`;
+    const i=d.cleared;const boss=BOSS_SETS[id][i];const hp=bossHp(id,i,d);const hppct=Math.max(0,Math.min(100,hp.cur/hp.max*100));const remain=Math.max(0,Math.ceil(d.seg*(i+1)-d.prog));
+    return `<div class="peekC"><div class="pcTag">今のボス・${Q.name}</div>
+      <div class="pcMain"><div class="pcArt">${bossArt(boss,'pcEmoji')}</div>
+        <div class="pcInfo"><div class="pcName">${boss.name}</div>
+          <div class="pcHpRow"><span>HP ${hp.cur}/${hp.max}</span><div class="bar nhp"><i style="width:${hppct}%"></i></div></div>
+          <div class="pcRew">⭐+${boss.xp}EXP 🪙+${boss.gold}G ・ あと <b>${fmt(remain)}</b> で討伐</div></div></div>
+      <button class="pcBtn" onclick="showView('map');selJourney('${id}')">▶ 冒険マップへ</button></div>`;}).join('');
+  const mt=monthTotals();const sj=journeyData('study');const spct=Math.min(100,sj.prog/sj.goal*100);
+  const qsum=`<div class="qsum">
+    <div class="box"><div class="t">🎯 勉強ゴール</div><div class="v"><b>${fmtStudy(sj.prog)}</b> / ${fmtStudy(sj.goal)}</div><div class="bar"><i style="width:${spct}%"></i></div></div>
+    <div class="box"><div class="t">📅 今月の累計</div><div class="v">📚 ${fmtStudy(mt.study)}　🏷️ ${mt.listing}品</div></div>
+  </div>`;
+  document.getElementById('view-quest').innerHTML=mapPeek+qsum+QUESTS.map(Q=>{
     const q=S.quests[Q.id];const itemXp=Math.min(q.count,ITEM_CAP)*XP_PER_ITEM;const g=S.goals[Q.id]||0;
     const xpLine=Q.noCount
       ? `<div class="qxp">実施で +${XP_DONE}XP（実施したかどうかの記録）</div>`
@@ -621,19 +707,41 @@ function renderMap(){
   document.getElementById('jProgFill').style.width=pct+'%';
   document.getElementById('jProgLab').textContent=fmt(d.prog)+' / '+fmt(d.goal)+'（'+Math.floor(pct)+'%）';
   const set=BOSS_SETS[id];let html='';
-  html+=`<div class="node start"><div class="dot">🚩</div><div class="ninfo"><div class="nname">スタート</div></div></div>`;
-  for(let i=0;i<NBOSS;i++){const cp=d.seg*(i+1);const cleared=i<d.cleared;const current=i===d.cleared&&d.cleared<NBOSS;const boss=set[i];const fin=(i===NBOSS-1);
-    let detail='';
-    if(current){const sp=Math.max(0,d.prog-d.seg*i);const spct=Math.min(100,sp/d.seg*100);const remain=Math.max(0,Math.ceil(d.seg*(i+1)-d.prog));
-      detail=`<div class="bar nhp"><i style="width:${spct}%"></i></div><div class="remain">⚔️ あと ${fmt(remain)} で討伐！</div>`;}
-    html+=`<div class="node ${cleared?'cleared':current?'current':'locked'}">
-      <div class="dot">${cleared?'💀':boss.emoji}${current?'<span class="heroM">🧙</span>':''}</div>
-      <div class="ninfo"><div class="nname">${fin?'【ラスボス】':''}${boss.name}</div><div class="ncp">${fmt(cp)} 地点${cleared?'・討伐済み':''}</div>${detail}</div>
+  html+=`<div class="node start"><div class="dot">🚩</div><div class="ninfo center"><div class="nname">START</div></div></div>`;
+  for(let i=0;i<NBOSS;i++){const cleared=i<d.cleared;const current=i===d.cleared&&d.cleared<NBOSS;const boss=set[i];const fin=(i===NBOSS-1);
+    const hp=bossHp(id,i,d);const hppct=Math.max(0,Math.min(100,hp.cur/hp.max*100));
+    const stat=cleared?'<span class="nstat ok">✓</span>':current?'<span class="nstat cur">›</span>':'<span class="nstat">🔒</span>';
+    html+=`<div class="node ${cleared?'cleared':current?'current':'locked'}" onclick="openBoss('${id}',${i})">
+      <div class="dot">${bossArt(boss,'bemoji')}${current?'<span class="heroM">🧙</span>':''}</div>
+      <div class="ninfo">
+        <div class="nrow"><span class="nbadge">${i+1}</span><span class="nname">${fin?'👑':''}${boss.name}</span>${stat}</div>
+        <div class="nhpRow"><span class="nhplab">HP ${hp.cur} / ${hp.max}</span><div class="bar nhp ${cleared?'cl':''}"><i style="width:${cleared?100:hppct}%"></i></div></div>
+        <div class="nrew">⭐ +${boss.xp} EXP　🪙 +${boss.gold}G</div>
+      </div>
     </div>`;}
   const done=d.cleared>=NBOSS;
-  html+=`<div class="node goal ${done?'cleared':''}"><div class="dot">${done?'🏆':'🏁'}</div><div class="ninfo"><div class="nname">${done?'ゴール達成！🎉':'ゴール'}</div><div class="ncp">${fmt(d.goal)}</div></div></div>`;
+  html+=`<div class="node goal ${done?'cleared':''}"><div class="dot">${done?'🏆':'🏁'}</div>
+      <div class="ninfo center"><div class="nname">${done?'ゴール達成！🎉':'ゴール（'+fmt(d.goal)+'）'}</div>
+        <div class="grand">全ボス討伐で ⭐ +${GRAND_REWARD.xp} EXP　🪙 +${GRAND_REWARD.gold}G</div></div></div>`;
   document.getElementById('jTrack').innerHTML=html;
 }
+/* ---- Boss detail page ---- */
+function openBoss(id,i){const d=journeyData(id);const boss=BOSS_SETS[id][i];const hp=bossHp(id,i,d);const fmt=v=>id==='study'?fmtStudy(Math.round(v)):Math.round(v)+'品';
+  const cleared=i<d.cleared;const current=i===d.cleared&&d.cleared<NBOSS;
+  const remain=Math.max(0,Math.ceil(d.seg*(i+1)-d.prog));
+  const act=id==='study'?'勉強を記録して攻撃する':'出品を記録して攻撃する';
+  const statusLine=cleared?'<div class="bdStatus ok">✓ 討伐済み</div>':current?`<div class="bdStatus">討伐まで　⏱️ あと ${fmt(remain)}</div>`:'<div class="bdStatus lock">🔒 まだ戦えない（前のボスを倒そう）</div>';
+  document.getElementById('bdBody').innerHTML=`
+    <div class="bdArt">${bossArt(boss,'bdEmoji')}</div>
+    <div class="bdName">${i+1}. ${boss.name}${i===NBOSS-1?' 👑':''}</div>
+    <div class="bdDesc">${boss.desc}</div>
+    <div class="bdHpRow"><span>HP</span><div class="bar nhp"><i style="width:${cleared?100:Math.max(0,Math.min(100,hp.cur/hp.max*100))}%"></i></div><b>${hp.cur}/${hp.max}</b></div>
+    <div class="bdRew">🔒 討伐報酬　⭐ ${boss.xp} EXP　🪙 ${boss.gold} G</div>
+    ${statusLine}
+    <button class="bdBtn" onclick="closeBoss();showView('quest')">📖 ${act} ▶</button>`;
+  document.getElementById('bossDetail').classList.add('on');
+}
+function closeBoss(){document.getElementById('bossDetail').classList.remove('on');}
 
 /* ================= Calendar ================= */
 let calY,calM;(function(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();})();

@@ -1,5 +1,5 @@
 /* ユウタクエスト Service Worker — offline caching + push reminders */
-const CACHE = 'ebay-quest-v8';
+const CACHE = 'ebay-quest-v9';
 const ASSETS = [
   './',
   './index.html',
