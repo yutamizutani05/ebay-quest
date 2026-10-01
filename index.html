@@ -111,6 +111,10 @@
   .cell.has{cursor:pointer}
   .cell .star{position:absolute; top:1px; right:3px; font-size:9px}
   .cell.empty{background:transparent; border:0}
+  .studyBanner{display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:linear-gradient(180deg,#243b6e,#1b2a52); border:2px solid #3a5b9e; border-radius:12px;
+    padding:12px 16px; margin-bottom:12px; box-shadow:var(--shadow); font-size:13px; color:#bcd3ff}
+  .studyBanner b{font-size:22px; color:#7fb8ff}
   .calsum{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap}
   .calsum .box{flex:1; min-width:90px; background:var(--panel); border:2px solid var(--line); border-radius:10px; padding:10px; text-align:center; box-shadow:var(--shadow)}
   .calsum .box b{display:block; font-size:20px; color:var(--gold)}
@@ -185,6 +189,7 @@
           <span class="chip mult" id="multChip">XP x1.0</span>
           <span class="chip gold">🪙 <b id="gold">0</b></span>
           <span class="chip">気力 <span class="hearts" id="hearts">♡♡♡</span></span>
+          <span class="chip">📚 累計 <b id="studyTotal">0分</b></span>
         </div>
       </div>
     </div>
@@ -203,6 +208,7 @@
 
   <!-- CALENDAR -->
   <div class="view" id="view-cal">
+    <div class="studyBanner">📚 累計勉強時間<b id="studyBannerVal">0分</b></div>
     <div class="calhead">
       <button onclick="calMove(-1)">‹</button>
       <div class="mon pix" id="calMon"></div>
@@ -211,6 +217,7 @@
     <div class="cal" id="calGrid"></div>
     <div class="calsum">
       <div class="box"><b id="sumDays">0</b><span>稼働日</span></div>
+      <div class="box"><b id="sumStudy">0分</b><span>今月の勉強</span></div>
       <div class="box"><b id="sumItems">0</b><span>合計件数</span></div>
       <div class="box"><b id="sumXp">0</b><span>獲得XP</span></div>
     </div>
@@ -347,6 +354,9 @@ function todayItems(){let t=0;for(const k in S.quests)t+=S.quests[k].count;retur
 function todayDone(){let t=0;for(const k in S.quests)if(S.quests[k].done)t++;return t;}
 function cumItems(){return S.stats.totalItems+todayItems();}
 function cumQuests(){return S.stats.totalQuests+todayDone();}
+// 累計勉強時間（履歴は today を含めて記録されるので history の合計でOK）
+function totalStudyKoma(){let k=0;for(const d in S.history){const c=S.history[d].counts;if(c&&c.study)k+=c.study;}return k;}
+function fmtStudy(koma){const min=koma*30;const h=Math.floor(min/60),m=min%60;if(h>0)return m>0?h+'時間'+m+'分':h+'時間';return min+'分';}
 
 /* ================= Boss ================= */
 function ensureBoss(){const wk=weekKey();if(!S.boss||S.boss.week!==wk){const b=BOSSES[hashStr(wk)%BOSSES.length];const maxHp=500+S.level*25;S.boss={week:wk,name:b.name,emoji:b.emoji,maxHp,hp:maxHp,defeated:false};}}
@@ -488,6 +498,7 @@ function render(){
   document.getElementById('streak').textContent=S.streak;
   document.getElementById('multChip').textContent='XP x'+streakMult().toFixed(1);
   document.getElementById('gold').textContent=S.gold;
+  document.getElementById('studyTotal').textContent=fmtStudy(totalStudyKoma());
   const dc=todayDone(), qn=QUESTS.length;
   document.getElementById('hearts').textContent='♥'.repeat(dc)+'♡'.repeat(Math.max(0,qn-dc));
 
@@ -554,16 +565,18 @@ function renderCal(){
   const dow=['日','月','火','水','木','金','土'];
   let html=dow.map(d=>`<div class="dow">${d}</div>`).join('');
   for(let i=0;i<first;i++)html+=`<div class="cell empty"></div>`;
-  let sd=0,si=0,sx=0;
+  let sd=0,si=0,sx=0,sStudy=0;
   for(let d=1;d<=days;d++){
     const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const h=S.history[ds];const done=h?h.done:0;const items=h?Object.values(h.counts).reduce((a,b)=>a+(b||0),0):0;
-    if(h){sd++;si+=items;sx+=h.xp;}
+    if(h){sd++;si+=items;sx+=h.xp;sStudy+=(h.counts&&h.counts.study)||0;}
     const cls=['cell',heatClass(done),(ds===today?'today':''),(h?'has':'')].filter(Boolean).join(' ');
     html+=`<div class="${cls}" ${h?`onclick="openDay('${ds}')"`:''}>${d}${done>=QUESTS.length?'<span class="star">🔥</span>':''}</div>`;
   }
   document.getElementById('calGrid').innerHTML=html;
   document.getElementById('sumDays').textContent=sd;document.getElementById('sumItems').textContent=si;document.getElementById('sumXp').textContent=sx;
+  document.getElementById('sumStudy').textContent=fmtStudy(sStudy);
+  document.getElementById('studyBannerVal').textContent=fmtStudy(totalStudyKoma());
 }
 function openDay(ds){const h=S.history[ds];if(!h)return;document.getElementById('popTitle').textContent=ds+' の記録';
   const rows=QUESTS.map(Q=>`<div class="poprow"><span>${Q.emoji} ${Q.name}</span><b>${h.counts[Q.id]||0} ${Q.unit}</b></div>`).join('');
