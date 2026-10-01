@@ -79,7 +79,8 @@
   .peekC .pcMain{display:flex; gap:11px; align-items:center}
   .peekC .pcArt{width:52px; height:52px; flex:0 0 auto; border-radius:11px; display:grid; place-items:center; font-size:30px;
     background:radial-gradient(circle at 50% 40%,#3a2d78,#160f30); border:1px solid var(--line)}
-  .peekC .pcArt .bimg{width:46px; height:46px; object-fit:contain}
+  .peekC .pcArt{overflow:hidden}
+  .peekC .pcArt .bimg{width:100%; height:100%; object-fit:cover}
   .peekC .pcInfo{flex:1; min-width:0}
   .peekC .pcName{font-size:15px; font-weight:700}
   .peekC .pcHpRow{display:flex; align-items:center; gap:7px; margin-top:6px; font-size:10px; color:var(--muted)}
@@ -98,22 +99,26 @@
   .goalRow2 b{color:var(--gold); font-size:15px}
   .bar.jbar{height:18px; margin-bottom:6px}
   .bar.jbar > i{background:linear-gradient(180deg,var(--green),#3fbf80)}
-  .track{position:relative; margin-top:10px; padding:16px 12px 16px 46px; border-radius:14px; border:2px solid var(--line);
-    background:linear-gradient(180deg,#1e2a5c 0%,#24345e 35%,#1f3a3e 70%,#1e3a2a 100%)}
-  .track:before{content:''; position:absolute; left:27px; top:18px; bottom:18px; width:4px; background:rgba(255,255,255,.18); border-radius:2px}
-  .node{position:relative; display:flex; gap:10px; align-items:flex-start; margin-bottom:14px}
-  .node .dot{position:absolute; left:-34px; width:34px; height:34px; border-radius:50%; display:grid; place-items:center;
-    font-size:17px; background:#160f30; border:2px solid var(--line); z-index:1}
-  .node.current .dot{border-color:var(--gold); background:#2c2352; box-shadow:0 0 0 3px rgba(255,210,87,.25)}
-  .node.cleared .dot{border-color:var(--green); background:#1c2b3a; filter:grayscale(.2)}
-  .node .heroM{position:absolute; bottom:-10px; right:-8px; font-size:15px}
+  .track{position:relative; margin-top:10px; padding:16px 12px 16px 56px; border-radius:14px; border:2px solid var(--line);
+    background:linear-gradient(180deg,rgba(20,14,38,.62),rgba(20,14,38,.72)), url(assets/map.webp); background-size:cover; background-position:center}
+  .track:before{content:''; position:absolute; left:37px; top:18px; bottom:18px; width:4px; background:rgba(255,255,255,.28); border-radius:2px}
+  .node{position:relative; display:flex; gap:14px; align-items:flex-start; margin-bottom:14px}
+  .node .dot{position:absolute; left:-41px; width:42px; height:42px; border-radius:11px; display:grid; place-items:center; overflow:hidden;
+    font-size:18px; background:#160f30; border:2px solid var(--line); z-index:1}
+  .node.current .dot{border-color:var(--gold); background:#2c2352; box-shadow:0 0 0 3px rgba(255,210,87,.3)}
+  .node.cleared .dot{border-color:var(--green)}
+  .node.locked .dot{filter:grayscale(.5) brightness(.8)}
+  .node .dot.castle{border-color:var(--gold); background:#160f30}
+  .node .heroM{position:absolute; bottom:-12px; right:-12px; width:26px; height:26px; object-fit:contain;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.6)); z-index:2}
   .node .ninfo{flex:1; min-width:0; background:var(--panel); border:2px solid var(--line); border-radius:11px; padding:10px 12px; box-shadow:var(--shadow)}
   .node.current .ninfo{border-color:var(--gold)}
   .node.cleared .ninfo{opacity:.65}
   .node.locked .ninfo{opacity:.5}
   .node .nname{font-size:14px; font-weight:700}
   .node .bemoji{font-size:19px; line-height:1}
-  .node .dot .bimg{width:30px; height:30px; object-fit:contain}
+  .node .dot .bimg{width:100%; height:100%; object-fit:cover}
+  .node .dot.castle img{width:100%; height:100%; object-fit:cover}
   .node .nrow{display:flex; align-items:center; gap:7px}
   .node .nbadge{width:19px; height:19px; flex:0 0 auto; border-radius:50%; background:var(--gold); color:#241a4d; font-size:11px; font-weight:700; display:grid; place-items:center}
   .node .nstat{margin-left:auto; font-size:14px; color:var(--muted)}
@@ -478,6 +483,8 @@ const BOSS_SETS={
   ]
 };
 const GRAND_REWARD={xp:1000,gold:2000}; // 全ボス討伐の大報酬
+BOSS_SETS.study.forEach((b,i)=>b.img='assets/study-'+(i+1)+'.webp');
+BOSS_SETS.listing.forEach((b,i)=>b.img='assets/listing-'+(i+1)+'.webp');
 // ボスの絵（画像があれば差し替え。無ければ絵文字）
 function bossArt(boss,cls){return boss&&boss.img?`<img src="${boss.img}" class="${cls} bimg" alt="">`:`<span class="${cls}">${boss?boss.emoji:'❓'}</span>`;}
 // 累計進捗（today は履歴に二重計上しないよう live を別に足す）
@@ -712,7 +719,7 @@ function renderMap(){
     const hp=bossHp(id,i,d);const hppct=Math.max(0,Math.min(100,hp.cur/hp.max*100));
     const stat=cleared?'<span class="nstat ok">✓</span>':current?'<span class="nstat cur">›</span>':'<span class="nstat">🔒</span>';
     html+=`<div class="node ${cleared?'cleared':current?'current':'locked'}" onclick="openBoss('${id}',${i})">
-      <div class="dot">${bossArt(boss,'bemoji')}${current?'<span class="heroM">🧙</span>':''}</div>
+      <div class="dot">${bossArt(boss,'bemoji')}${current?'<img src="assets/hero.webp" class="heroM" alt="">':''}</div>
       <div class="ninfo">
         <div class="nrow"><span class="nbadge">${i+1}</span><span class="nname">${fin?'👑':''}${boss.name}</span>${stat}</div>
         <div class="nhpRow"><span class="nhplab">HP ${hp.cur} / ${hp.max}</span><div class="bar nhp ${cleared?'cl':''}"><i style="width:${cleared?100:hppct}%"></i></div></div>
@@ -720,7 +727,7 @@ function renderMap(){
       </div>
     </div>`;}
   const done=d.cleared>=NBOSS;
-  html+=`<div class="node goal ${done?'cleared':''}"><div class="dot">${done?'🏆':'🏁'}</div>
+  html+=`<div class="node goal ${done?'cleared':''}"><div class="dot castle"><img src="assets/castle.webp" alt=""></div>
       <div class="ninfo center"><div class="nname">${done?'ゴール達成！🎉':'ゴール（'+fmt(d.goal)+'）'}</div>
         <div class="grand">全ボス討伐で ⭐ +${GRAND_REWARD.xp} EXP　🪙 +${GRAND_REWARD.gold}G</div></div></div>`;
   document.getElementById('jTrack').innerHTML=html;

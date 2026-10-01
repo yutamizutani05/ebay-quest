@@ -1,12 +1,15 @@
 /* ユウタクエスト Service Worker — offline caching + push reminders */
-const CACHE = 'ebay-quest-v9';
+const CACHE = 'ebay-quest-v10';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './assets/hero.webp','./assets/map.webp','./assets/castle.webp',
+  './assets/study-1.webp','./assets/study-2.webp','./assets/study-3.webp','./assets/study-4.webp','./assets/study-5.webp',
+  './assets/listing-1.webp','./assets/listing-2.webp','./assets/listing-3.webp','./assets/listing-4.webp','./assets/listing-5.webp'
 ];
 
 self.addEventListener('install', e => {
