@@ -2,8 +2,11 @@ name: Daily reminder push
 
 on:
   schedule:
-    - cron: '0 11 * * *'   # 11:00 UTC = 20:00 JST (毎日)
-  workflow_dispatch: {}     # 手動テスト送信用
+    # GitHubのscheduleは混雑で数十分〜数時間遅れることがある。:00は特に混むので少し早め＆オフピーク分に。
+    - cron: '37 10 * * *'   # 10:37 UTC = 19:37 JST 目安（遅延して20時前後に着く想定）
+  workflow_dispatch: {}            # 手動テスト送信用
+  repository_dispatch:             # 外部の正確なcron(cron-job.org等)から時刻ピッタリに発火させる用
+    types: [send-reminder]
 
 jobs:
   push:

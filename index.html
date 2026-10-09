@@ -234,9 +234,13 @@
   .pop.on{display:grid}
   .popcard{background:var(--panel2); border:2px solid var(--line); border-radius:14px; padding:18px; max-width:320px; width:100%; box-shadow:0 10px 30px rgba(0,0,0,.5)}
   .popcard h3{font-size:14px; color:var(--gold); margin-bottom:12px}
-  .poprow{display:flex; justify-content:space-between; font-size:13px; padding:7px 0; border-bottom:1px dashed var(--line)}
+  .poprow{display:flex; justify-content:space-between; align-items:center; font-size:13px; padding:8px 0; border-bottom:1px dashed var(--line)}
   .poprow:last-of-type{border-bottom:0}
-  .popcard button{margin-top:14px; width:100%; padding:11px; border-radius:10px; border:0; background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700; font-family:inherit; font-size:14px; cursor:pointer}
+  .dayStep{display:flex; align-items:center; gap:0; background:#160f30; border:1px solid var(--line); border-radius:9px}
+  .dayStep button{width:34px; height:30px; border:0; background:transparent; color:var(--gold); font-size:18px; font-family:inherit; cursor:pointer; margin:0; padding:0; border-radius:0}
+  .dayStep b{min-width:54px; text-align:center; font-size:13px}
+  .popNote{font-size:10px; color:var(--muted); margin-top:10px; text-align:center}
+  .popcard > button{margin-top:14px; width:100%; padding:11px; border-radius:10px; border:0; background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700; font-family:inherit; font-size:14px; cursor:pointer}
   #toast{position:fixed; left:50%; top:14%; transform:translateX(-50%) scale(.8); background:linear-gradient(180deg,var(--gold),var(--gold2)); color:#241a4d; font-weight:700; padding:13px 20px; border-radius:12px; font-size:15px; z-index:60; opacity:0; pointer-events:none; transition:.35s; box-shadow:0 8px 24px rgba(0,0,0,.5); text-align:center; border:2px solid #fff3d0; max-width:82%}
   #toast.show{opacity:1; transform:translateX(-50%) scale(1)}
   #toast small{display:block; font-size:11px; font-weight:400; margin-top:2px}
@@ -316,7 +320,7 @@
     <div class="calsum">
       <div class="box"><b id="sumDays">0</b><span>稼働日</span></div>
       <div class="box"><b id="sumStudy">0分</b><span>今月の勉強</span></div>
-      <div class="box"><b id="sumItems">0</b><span>合計件数</span></div>
+      <div class="box"><b id="sumListing">0</b><span>今月の出品</span></div>
       <div class="box"><b id="sumXp">0</b><span>獲得XP</span></div>
     </div>
     <div class="footer">セルをタップするとその日の内訳が見られます</div>
@@ -761,23 +765,51 @@ function renderCal(){
   const dow=['日','月','火','水','木','金','土'];
   let html=dow.map(d=>`<div class="dow">${d}</div>`).join('');
   for(let i=0;i<first;i++)html+=`<div class="cell empty"></div>`;
-  let sd=0,si=0,sx=0,sStudy=0;
+  let sd=0,sListing=0,sx=0,sStudy=0;
   for(let d=1;d<=days;d++){
     const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const h=S.history[ds];const done=h?h.done:0;const items=h?Object.values(h.counts).reduce((a,b)=>a+(b||0),0):0;
-    if(h){sd++;si+=items;sx+=h.xp;sStudy+=(h.counts&&h.counts.study)||0;}
-    const cls=['cell',heatClass(done),(ds===today?'today':''),(h?'has':'')].filter(Boolean).join(' ');
-    html+=`<div class="${cls}" ${h?`onclick="openDay('${ds}')"`:''}>${d}${done>=QUESTS.length?'<span class="star">🔥</span>':''}</div>`;
+    const h=S.history[ds];const done=h?h.done:0;
+    if(h){sd++;sx+=h.xp;sStudy+=(h.counts&&h.counts.study)||0;sListing+=(h.counts&&h.counts.listing)||0;}
+    const editable=ds<=today; // 今日まで（未来は不可）
+    const cls=['cell',heatClass(done),(ds===today?'today':''),(editable?'has':'')].filter(Boolean).join(' ');
+    html+=`<div class="${cls}" ${editable?`onclick="openDay('${ds}')"`:''}>${d}${done>=QUESTS.length?'<span class="star">🔥</span>':''}</div>`;
   }
   document.getElementById('calGrid').innerHTML=html;
-  document.getElementById('sumDays').textContent=sd;document.getElementById('sumItems').textContent=si;document.getElementById('sumXp').textContent=sx;
+  document.getElementById('sumDays').textContent=sd;document.getElementById('sumListing').textContent=sListing+'品';document.getElementById('sumXp').textContent=sx;
   document.getElementById('sumStudy').textContent=fmtStudy(sStudy);
   document.getElementById('studyBannerVal').textContent=fmtStudy(totalStudyKoma());
 }
-function openDay(ds){const h=S.history[ds];if(!h)return;document.getElementById('popTitle').textContent=ds+' の記録';
-  const rows=QUESTS.map(Q=>`<div class="poprow"><span>${Q.emoji} ${Q.name}</span><b>${h.counts[Q.id]||0} ${Q.unit}</b></div>`).join('');
-  document.getElementById('popBody').innerHTML=`<div class="poprow"><span>完了クエスト</span><b>${h.done} / ${QUESTS.length}</b></div>`+rows+`<div class="poprow"><span>獲得XP</span><b style="color:var(--gold)">${h.xp} XP</b></div>`;
-  document.getElementById('pop').classList.add('on');}
+// 日の記録を表示＆編集（過去日も修正可）
+let openDayDate=null;
+function openDay(ds){
+  const today=todayStr();if(ds>today)return;
+  openDayDate=ds;const h=S.history[ds];const counts=(h&&h.counts)||{};
+  document.getElementById('popTitle').textContent=ds+(ds===today?'（今日）':'')+' の記録';
+  const rows=QUESTS.map(Q=>{const c=counts[Q.id]||0;return `<div class="poprow"><span>${Q.emoji} ${Q.name}</span>
+    <span class="dayStep"><button onclick="setDayCount('${ds}','${Q.id}',-1)">−</button><b>${c} ${Q.unit}</b><button onclick="setDayCount('${ds}','${Q.id}',1)">＋</button></span></div>`;}).join('');
+  const xp=h?h.xp:0;
+  document.getElementById('popBody').innerHTML=rows+`<div class="poprow"><span>獲得XP</span><b style="color:var(--gold)">${xp} XP</b></div><div class="popNote">＋ / − で過去の記録も修正できます</div>`;
+  document.getElementById('pop').classList.add('on');
+}
+// 指定日のカウントを増減（今日=ライブ、過去=履歴を直接編集して累計を調整）
+function setDayCount(ds,id,delta){
+  rollover();const today=todayStr();
+  if(ds===today){ S.quests[id].count=Math.max(0,(S.quests[id].count||0)+delta); recompute(true); save(); }
+  else {
+    const h=S.history[ds];const counts={};for(const q of QUESTS)counts[q.id]=(h&&h.counts&&h.counts[q.id])||0;
+    let oldItems=0,oldDone=0;for(const q of QUESTS){const c=counts[q.id];oldItems+=c;if(c>0)oldDone++;}
+    const oldXp=h?h.xp:0;
+    counts[id]=Math.max(0,counts[id]+delta);
+    let items=0,done=0,newXp=0;for(const q of QUESTS){const c=counts[q.id];items+=c;if(c>0)done++;newXp+=Math.min(c,ITEM_CAP)*XP_PER_ITEM;}
+    newXp+=done*XP_DONE;if(done===QUESTS.length)newXp+=PERFECT_BONUS;
+    if(items>0){S.history[ds]={done,counts,xp:newXp};}else{delete S.history[ds];newXp=0;}
+    S.xpCommitted=Math.max(0,S.xpCommitted+newXp-oldXp);
+    S.stats.totalItems=Math.max(0,S.stats.totalItems+items-oldItems);
+    S.stats.totalQuests=Math.max(0,S.stats.totalQuests+done-oldDone);
+    recompute(true); save();
+  }
+  render();renderCal();openDay(ds);
+}
 function closePop(){document.getElementById('pop').classList.remove('on');}
 
 /* ================= Achievements view ================= */
