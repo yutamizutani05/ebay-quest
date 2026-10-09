@@ -861,8 +861,10 @@ async function enableNotify(){
     const perm=await Notification.requestPermission();
     if(perm!=='granted'){msg.innerHTML='通知が許可されませんでした。iPhoneの「設定 > 通知」から後で許可できます。';return;}
     const reg=await navigator.serviceWorker.ready;
-    let sub=await reg.pushManager.getSubscription();
-    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8(VAPID_PUBLIC)});
+    // 既存の購読は失効している可能性があるので、必ず作り直してフレッシュな購読にする
+    const existing=await reg.pushManager.getSubscription();
+    if(existing){try{await existing.unsubscribe();}catch(_){}}
+    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8(VAPID_PUBLIC)});
     await mirrorRecorded();
     document.getElementById('notifBtn').textContent='✅ オン';document.getElementById('notifBtn').classList.add('on');
     msg.innerHTML='✅ 通知をオンにしました！<br><b>下のボタンで購読情報をコピーして、チャットに貼り付けてください</b>（毎日20時の送信設定に使います）。';
